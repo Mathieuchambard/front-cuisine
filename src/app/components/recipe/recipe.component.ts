@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Navigation, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Recipe } from 'src/app/model/recipe.model';
+import { RecipeService } from 'src/app/services/recipe.service';
+
 
 @Component({
   selector: 'app-recipe',
@@ -9,17 +11,20 @@ import { Recipe } from 'src/app/model/recipe.model';
 })
 export class RecipeComponent implements OnInit {
 
-  recipe!: Recipe;
+  id: string;
+  recipe!: Recipe ;
 
-  constructor(private router: Router) { 
-    let nav: Navigation | null = this.router.getCurrentNavigation();
 
-    if (nav && nav.extras && nav.extras.state) {
-      this.recipe = nav.extras.state as Recipe;
-    }
+  constructor(private route: ActivatedRoute,private recipeService: RecipeService) { 
+    
+    this.id = this.route.snapshot.paramMap.get('id')!;
   }
 
   ngOnInit(): void {
+    this.recipeService.getRecipe(this.id).subscribe((recipe:Recipe) => {
+      this.recipe = recipe;
+  });
+    
   }
 
 }

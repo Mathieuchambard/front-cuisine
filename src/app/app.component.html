@@ -1,13 +1,10 @@
-<div class="flex-column width-100 height-100">
-    <div class="width-100 second-background-color">
+<div class="flex-row width-100 height-100">
+    <div class="width-10 height-100 second-background-color">
         <app-header></app-header>
     </div>
-    <div class="width-100 second-background-color">
-        <router-outlet></router-outlet>
-    </div>
-   
-    <div class="width-100 second-background-color flex-end">
+    <div class="flex-column height-100 width-80 second-background-color">
+        <router-outlet ></router-outlet>
         <app-footer></app-footer>
-    </div>    
+    </div>
 </div>
 

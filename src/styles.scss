@@ -103,6 +103,10 @@ app-root {
     height: 100%;
 }
 
+.height-30 {
+    height: 30%;
+}
+
 .height-inherit {
     height: inherit;
 }
@@ -174,3 +178,5 @@ app-root {
 .large-input .mat-form-field-appearance-outline.mat-form-field-infix {
     padding: 0 !important;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

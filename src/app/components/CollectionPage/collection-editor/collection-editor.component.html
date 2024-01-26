@@ -1,0 +1,60 @@
+<div class="flex-column justify-center align-center" [formGroup]="recipeForm">
+    <div class="flex-column width-80 justify-center align-center margin"> 
+        <mat-form-field appearance="outline" class="width-50">
+            <mat-label>Nom de la collection</mat-label>
+            <input matInput
+                    formControlName="name">
+        </mat-form-field>
+  
+  
+  
+        <div class="flex-row justify-around width-100">
+            
+            <mat-form-field appearance="outline" class="width-80 height-30">
+                <mat-label>Description</mat-label>
+                <input matInput
+                        formControlName="description">
+            </mat-form-field>
+            
+        </div> 
+    </div>
+  
+  
+    <div class="flex-column width-80 justify-center margin" >
+      <div class="flex-column width-100 align-center" formArrayName="recipes">
+          <h3>Liste des recettes</h3>
+          <div *ngFor="let recipe of formArrayRecipes().controls; let i = index" [formGroupName]="i" class="flex-row justify-around width-100 align-center">
+              <div class="flex-row justify-center width-80">
+                  <mat-form-field appearance="outline" class="width-100">
+                      <mat-label>Recette</mat-label>
+                      <input type="text"
+                             matInput
+                             formControlName="name"
+                             [matAutocomplete]="auto">
+                      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let recipe of allRecipe " [value]="recipe.name">
+                          {{recipe.name}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+              </div>                
+              <button mat-mini-fab color="accent" (click)="removeRecipeCollection(i)" class="small-icon-button align-center">
+                  <mat-icon>
+                      delete
+                  </mat-icon>
+              </button>
+          </div>
+  
+  
+          <button mat-mini-fab color="accent" (click)="addRecipeCollection()">
+              <mat-icon>
+                  add
+              </mat-icon>
+          </button>
+      </div>
+      <button mat-raised-button (click)="saveCollection()" [disabled]="!recipeForm.valid" class="margin">Sauvegarder</button>
+  </div>
+   
+  
+  
+  

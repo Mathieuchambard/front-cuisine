@@ -1,19 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { RecipeService } from 'src/app/services/recipe.service';
+import { Component, Input, OnInit } from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser'; 
+
+import { RecipeDTO } from 'src/app/model/RecipeDTO.model';
+
 
 @Component({
   selector: 'app-recipes-display',
   templateUrl: './recipes-display.component.html',
   styleUrls: ['./recipes-display.component.scss']
 })
-export class RecipesDisplayComponent implements OnInit {
-  recipesName: String[] =['Recette1', 'Recette2', 'Recette3'];
+
+export class RecipesDisplayComponent{
+  @Input() recipesName: RecipeDTO[] =[];
+
   
-
-  constructor( private recipeService: RecipeService) { }
-
-  ngOnInit(): void {
-    //this.recipesName = this.recipeService.getAllRecipes();
-  }
-
 }

@@ -9,6 +9,7 @@ import { getUnitByValue, Unit } from 'src/app/model/unit.model';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { map, Observable, startWith } from 'rxjs';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { map, Observable, startWith } from 'rxjs';
 })
 export class AdministrationComponent implements OnInit {
 
-  listIngredients: string[] = ["Riz", "Tartare", "Crotte d'Ileana"];
+  listIngredients: string[] = [];
   nameIngredient: string = "";
   recipeForm!: FormGroup;
 
@@ -44,9 +45,7 @@ export class AdministrationComponent implements OnInit {
       serves: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
       cooking: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
       preparation: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-      rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-      category: ['', Validators.required],
-      subcategory: ['', Validators.required]
+      rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]]
     });
   }
 
@@ -54,7 +53,7 @@ export class AdministrationComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.ingredientService.listIngredients.filter((option: Ingredient) => option.name.toLowerCase().includes(filterValue)).map((value: Ingredient) => value.name);
+    return this.ingredientService.listIngredients.filter((option: string) => option.toLowerCase().includes(filterValue)).map((value: string) => value);
   }
 
 
@@ -143,10 +142,10 @@ export class AdministrationComponent implements OnInit {
   }
   
   refreshIngredients() {
-    this.ingredientService.getAllIngredients().subscribe((listIngredients: Ingredient[]) => {
+    this.ingredientService.getAllIngredients().subscribe((listIngredients: string[]) => {
       this.listIngredients = [];
-      listIngredients.forEach((ingredient: Ingredient) => {
-        this.listIngredients.push(ingredient.name);
+      listIngredients.forEach((ingredient: string) => {
+        this.listIngredients.push(ingredient);
       });
     })
   }

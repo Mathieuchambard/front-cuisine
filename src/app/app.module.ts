@@ -17,14 +17,31 @@ import { FooterComponent } from './components/footer/footer.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
-import { RecipesDisplayComponent } from './components/recipes-display/recipes-display.component'; 
+import { RecipesDisplayComponent } from './components/recipes-display/recipes-display.component';
+import { CollectionsDisplayComponent } from './components/CollectionPage/collections-display/collections-display.component';
+import { HomePageComponent } from './components/home-page/home-page.component';
+import { CreateCollectionComponent } from './components/CollectionPage/create-collection/create-collection.component';
+import {MatFormFieldModule} from '@angular/material/form-field'; 
+import { AdministrationComponent } from './components/administration/administration.component';
+import { CollectionComponent } from './components/CollectionPage/collection/collection.component';
+import { AllRecetteComponent } from './components/all-recette/all-recette.component';
+import { CollectionEditorComponent } from './components/CollectionPage/collection-editor/collection-editor.component';
+import { CollectionModifierComponent } from './components/CollectionPage/collection-modifier/collection-modifier.component';
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
     RecipeComponent,
-    RecipesDisplayComponent
+    RecipesDisplayComponent,
+    CollectionsDisplayComponent,
+    HomePageComponent,
+    AdministrationComponent,
+    CreateCollectionComponent,
+    CollectionComponent,
+    AllRecetteComponent,
+    CollectionEditorComponent,
+    CollectionModifierComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +57,8 @@ import { RecipesDisplayComponent } from './components/recipes-display/recipes-di
     MatSelectModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
-    MatChipsModule
+    MatChipsModule,
+    MatFormFieldModule
 ],
   providers: [],
   bootstrap: [AppComponent]

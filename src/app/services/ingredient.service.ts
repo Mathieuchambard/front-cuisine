@@ -11,14 +11,14 @@ export class IngredientService {
 
 
   configUrl = 'http://localhost:8080';
-  listIngredients: Ingredient[] = [];
+  listIngredients: string[] = [];
 
   constructor(private http: HttpClient) {}
 
-  getAllIngredients(): Observable<Ingredient[]> {
+  getAllIngredients(): Observable<string[]> {
     if (this.listIngredients.length == 0) {
-      const obsIngredients: Observable<Ingredient[]> = this.http.get<Ingredient[]>(this.configUrl + "/ingredients");
-      obsIngredients.subscribe((ingredients: Ingredient[]) => {
+      const obsIngredients: Observable<string[]> = this.http.get<string[]>(this.configUrl + "/ingredients");
+      obsIngredients.subscribe((ingredients: string[]) => {
         this.listIngredients = ingredients;
       });
       return obsIngredients;

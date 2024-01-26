@@ -1,1 +1,23 @@
-{{ recipe.name }}
+<h1>{{recipe.name}}</h1>
+
+<img src={{recipe.urlImage}} alt="Description de l'image">
+
+
+
+Difficulté : {{recipe.difficulty}}
+Nombres de personnes : {{recipe.serves}}
+Temps de préparation : {{recipe.timeRecipe.preparation}} min
+Temps de cuisson : {{recipe.timeRecipe.cooking}} min
+Temps Repos : {{recipe.timeRecipe.rest}} min
+
+<ul>
+    <li *ngFor="let ingredient of recipe.ingredients">
+        {{ ingredient.name }} : {{ ingredient.quantity }}{{ ingredient.unit }}
+    </li>
+    </ul>
+
+<ul>
+<li *ngFor="let instruction of recipe.instructions">
+    {{ instruction }}
+</li>
+</ul>

@@ -1,0 +1,23 @@
+<div class="flex-column align-center">
+  <button mat-button class="width-20 custom-button" routerLink="/collectionCreator">Créer une collection</button>
+
+
+  <div *ngFor="let collection of collectionList" class="rectangle width-90">
+    <a [routerLink]="['/collection/', collection.nameId]" class="rectangle">
+      <div>
+        <h3>{{ collection.name }}</h3>
+        <p>{{ collection.description }}</p>
+        <p>Nombres de recettes : {{ collection.nRecipe }}</p>
+        
+      </div>
+    </a>
+    <button mat-fab color="primary" (click)="pressDelete(collection.nameId)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" >
+      <a [routerLink]="['/collectionModifier/', collection.nameId]" >
+        <mat-icon>menu</mat-icon></a>
+    </button>
+
+  </div>  
+</div>
