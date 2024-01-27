@@ -1,0 +1,33 @@
+
+<div class="flex-row width-100 height-100 justify-around">
+  <div *ngFor="let recipe of recipesName" [routerLink]="'/recette/' + recipe.nameId" class="border width-20 height-100 flex-column">
+    
+    <h1 class="flex-row justify-center">
+      {{ recipe.name }}
+    </h1>
+
+  <div class="flex-row justify-center ">
+    <img [src]="'assets/imageRecipe/' + recipe.nameId + '.png'" alt="Description de l'image" class="width-80 ">
+
+  </div>
+
+  <div class="flex-row justify-center ">
+    Nutriscore : {{recipe.nutriscore}}
+
+  </div>
+  <div class="flex-row justify-center ">
+    Temps de recettes : {{recipe.timeRecipe.cooking + recipe.timeRecipe.rest +recipe.timeRecipe.preparation}}
+
+  </div>
+  <div class="flex-row justify-center ">
+    Difficulté : {{recipe.difficulty}}
+
+  </div>
+
+    
+  </div>
+
+
+
+
+</div>
