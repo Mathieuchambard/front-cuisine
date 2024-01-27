@@ -133,12 +133,6 @@ export class AdministrationComponent implements OnInit {
     this.recipeForm.get('serves')!.value, 
     0, timeRecipe);
 
-
-
-
-    this.recipeService.addRecipe(recipe).subscribe(() => {
-      console.log("OK");
-    });
   }
   
   refreshIngredients() {

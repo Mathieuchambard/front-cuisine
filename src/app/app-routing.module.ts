@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RecipeComponent } from './components/recipe/recipe.component';
-import { RecipesDisplayComponent } from './components/recipes-display/recipes-display.component';
+import { RecipesDisplayComponent } from './components/CollectionPage/recipes-display/recipes-display.component';
 import { CollectionsDisplayComponent } from './components/CollectionPage/collections-display/collections-display.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { CreateCollectionComponent } from './components/CollectionPage/create-collection/create-collection.component';

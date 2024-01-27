@@ -1,4 +1,4 @@
-<div class="flex-column justify-center align-center" [formGroup]="recipeForm">
+<div *ngIf="recipeForm" class="flex-column justify-center align-center" [formGroup]="recipeForm">
     <div class="flex-column width-80 justify-center align-center margin"> 
         <mat-form-field appearance="outline" class="width-50">
             <mat-label>Nom de la collection</mat-label>

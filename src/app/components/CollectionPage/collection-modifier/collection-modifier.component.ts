@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ReplaySubject } from 'rxjs';
 import { Collection } from 'src/app/model/collection.model';
 import { Recipe } from 'src/app/model/recipe.model';
 import { CollectionService } from 'src/app/services/collection.service';
@@ -10,7 +11,7 @@ import { CollectionService } from 'src/app/services/collection.service';
   styleUrls: ['./collection-modifier.component.scss']
 })
 export class CollectionModifierComponent implements OnInit {
-  inputCollection!: Collection ;
+  inputCollectionSubject: ReplaySubject<Collection> = new ReplaySubject();
   collectionName!: string;
   
 
@@ -20,7 +21,7 @@ export class CollectionModifierComponent implements OnInit {
 
   ngOnInit(): void {
     this.collectionService.getCollection(this.collectionName).subscribe((collection:Collection) => {
-        this.inputCollection = collection;
+        this.inputCollectionSubject.next(collection);
     });
   }
 

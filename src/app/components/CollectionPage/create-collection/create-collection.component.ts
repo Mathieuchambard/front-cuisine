@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { Collection } from 'src/app/model/collection.model';
 
 
 @Component({
@@ -7,17 +9,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./create-collection.component.scss']
 })
 export class CreateCollectionComponent {
-  inputCollection: null = null;
 
-  constructor() { 
-
-    }
-
-
-
-  ngOnInit(): void {
-        
-  }
+  constructor() {}
+  ngOnInit(): void {}
 
 
 
