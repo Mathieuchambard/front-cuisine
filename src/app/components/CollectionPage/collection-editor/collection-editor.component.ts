@@ -1,5 +1,7 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { Collection } from 'src/app/model/collection.model';
 import { Recipe } from 'src/app/model/recipe.model';
@@ -27,7 +29,7 @@ export class CollectionEditorComponent implements OnInit {
 
 
   constructor( private recipeService: RecipeService, private collectionService: CollectionService,
-    private formbuilder: FormBuilder) { 
+    private formbuilder: FormBuilder,private router:Router) { 
 
       this.refreshIngredients(); 
     }
@@ -44,20 +46,27 @@ export class CollectionEditorComponent implements OnInit {
     }else{
       this.inputCollectionSubject.subscribe(
         (res:Collection) => {
-        this.inputCollection = res;
-        let listeRecipesForm = [];
-        for (let recipe of res.listRecipe) {
-          let formGroup: FormGroup = this.formbuilder.group({
-            name: [recipe, Validators.required],
-            manual: [false]
-          });
-      
-          listeRecipesForm.push(formGroup);
-        }
+
         this.recipeForm = this.formbuilder.group({
           name: [res.name, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
           description: [res.description, [ Validators.maxLength(400)]],
-          recipes: this.formbuilder.array(listeRecipesForm, Validators.required),});
+          recipes: this.formbuilder.array([], Validators.required),});
+
+        this.inputCollection = res;
+
+        for (let recipe of res.listRecipe) {
+          let recipeName = this.allRecipe.find(RecipeDTO => RecipeDTO.nameId === recipe);
+          if (recipeName != null){
+            let formGroup: FormGroup = this.formbuilder.group({
+            name: [recipeName.name, Validators.required],
+            manual: [false]
+            });
+      
+            this.filteredRecipes.push(recipeName.name);
+            this.formArrayRecipes().push(formGroup);}
+          
+        }
+        
         });
     }
     
@@ -108,12 +117,16 @@ export class CollectionEditorComponent implements OnInit {
     const monObjet = new Collection (this.recipeForm.get('name')!.value,"",this.recipeForm.get('description')!.value,recipes.length,recipes);
 
     if (this.inputCollectionSubject){
-      this.collectionService.modifyCollection(this.inputCollection.nameId,monObjet).subscribe();
+      this.collectionService.modifyCollection(this.inputCollection.nameId,monObjet).subscribe((response:HttpResponse<Collection>) =>  {
+        this.router.navigateByUrl("/collections");
+      });
     } else{
-      this.collectionService.postCollection(monObjet).subscribe();
+      this.collectionService.postCollection(monObjet).subscribe((response:HttpResponse<Collection>) =>  {
+        this.router.navigateByUrl("/collections");
+      });
     }
 
-
+    
   }
   
   refreshIngredients() {

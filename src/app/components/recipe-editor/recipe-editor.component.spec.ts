@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdministrationComponent } from './administration.component';
+import { AdministrationComponent } from './recipe-editor.component';
 
 describe('AdministrationComponent', () => {
   let component: AdministrationComponent;

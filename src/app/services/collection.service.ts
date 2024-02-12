@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Collection } from '../model/collection.model';
@@ -21,12 +21,12 @@ export class CollectionService {
     return this.http.get<Collection>(this.configUrl + "/collection/" + nameId);
   }
 
-  postCollection(collection:Collection): Observable<Collection> {
-    return this.http.post<Collection>(this.configUrl + "/post/collection",collection);
+  postCollection(collection:Collection): Observable<HttpResponse<Collection>> {
+    return this.http.post<HttpResponse<Collection>>(this.configUrl + "/post/collection",collection);
   }
 
-  modifyCollection(nameId:string,collection:Collection): Observable<Collection>{
-    return this.http.post<Collection>(this.configUrl + "/modify/collection/"+nameId,collection);
+  modifyCollection(nameId:string,collection:Collection): Observable<HttpResponse<Collection>>{
+    return this.http.put<HttpResponse<Collection>>(this.configUrl + "/modify/collection/"+nameId,collection);
   }
 
   deleteCollection(nameId:string): Observable<string> {

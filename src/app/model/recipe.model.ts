@@ -27,9 +27,10 @@ export class Recipe {
     timeRecipe!: TimeRecipe;
     urlImage!: string;
     date!: Date;
+    formDataImage!: FormData;
 
     constructor(name: string, ingredients: IngredientDTO[], instructions: string[],
-        difficulty: Difficulty, serves: number, price: number, timeRecipe: TimeRecipe) {
+        difficulty: Difficulty, serves: number, price: number, timeRecipe: TimeRecipe,formDataImage:FormData) {
             this.name = name;
             this.ingredients = ingredients;
             this.instructions = instructions;
@@ -37,6 +38,7 @@ export class Recipe {
             this.serves = serves;
             this.price = price;
             this.timeRecipe = timeRecipe;
+            this.formDataImage = formDataImage;
         }
 
 }

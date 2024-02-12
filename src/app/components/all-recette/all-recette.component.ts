@@ -22,4 +22,6 @@ export class AllRecetteComponent implements OnInit {
         this.recipesName = recipesName; 
     });
   }
+
+
 }

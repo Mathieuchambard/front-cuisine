@@ -22,11 +22,13 @@ import { CollectionsDisplayComponent } from './components/CollectionPage/collect
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { CreateCollectionComponent } from './components/CollectionPage/create-collection/create-collection.component';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
-import { AdministrationComponent } from './components/administration/administration.component';
+import { RecipeEditorComponent } from './components/recipe-editor/recipe-editor.component';
 import { CollectionComponent } from './components/CollectionPage/collection/collection.component';
 import { AllRecetteComponent } from './components/all-recette/all-recette.component';
 import { CollectionEditorComponent } from './components/CollectionPage/collection-editor/collection-editor.component';
 import { CollectionModifierComponent } from './components/CollectionPage/collection-modifier/collection-modifier.component';
+import { RecipeModifierComponent } from './components/recipe-modifier/recipe-modifier.component';
+import { RecipeCreatorComponent } from './components/recipe-creator/recipe-creator.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,12 +38,15 @@ import { CollectionModifierComponent } from './components/CollectionPage/collect
     RecipesDisplayComponent,
     CollectionsDisplayComponent,
     HomePageComponent,
-    AdministrationComponent,
+    RecipeEditorComponent,
     CreateCollectionComponent,
     CollectionComponent,
     AllRecetteComponent,
     CollectionEditorComponent,
-    CollectionModifierComponent
+    CollectionModifierComponent,
+    RecipeModifierComponent,
+    RecipeCreatorComponent,
+    RecipeEditorComponent
   ],
   imports: [
     BrowserModule,

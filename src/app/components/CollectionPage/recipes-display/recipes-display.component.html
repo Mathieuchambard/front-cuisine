@@ -1,7 +1,7 @@
 
 <div class="flex-row width-100 height-100 justify-around">
-  <div *ngFor="let recipe of recipesName" [routerLink]="'/recette/' + recipe.nameId" class="border width-20 height-100 flex-column">
-    
+  <div *ngFor="let recipe of recipesName"  class="border width-20 height-100 flex-column">
+    <div [routerLink]="'/recette/' + recipe.nameId">
     <h1 class="flex-row justify-center">
       {{ recipe.name }}
     </h1>
@@ -24,8 +24,18 @@
 
   </div>
 
-    
-  </div>
+</div>
+
+  <button mat-fab color="primary" (click)="pressDelete(recipe.nameId)">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-mini-fab color="primary" >
+    <a [routerLink]="'/recetteModifier/' + recipe.nameId" >
+      <mat-icon>menu</mat-icon></a>
+  </button>
+
+
+</div>
 
 
 

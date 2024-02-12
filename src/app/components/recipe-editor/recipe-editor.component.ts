@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Difficulty, getDifficultyByValue } from 'src/app/model/difficulty.model';
 import { Ingredient } from 'src/app/model/ingredient.model';
@@ -8,20 +8,23 @@ import { TimeRecipe } from 'src/app/model/timeRecipe.model';
 import { getUnitByValue, Unit } from 'src/app/model/unit.model';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { RecipeService } from 'src/app/services/recipe.service';
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable, ReplaySubject, startWith } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-administration',
-  templateUrl: './administration.component.html',
-  styleUrls: ['./administration.component.scss']
+  selector: 'app-recipe-editor',
+  templateUrl: './recipe-editor.component.html',
+  styleUrls: ['./recipe-editor.component.scss']
 })
-export class AdministrationComponent implements OnInit {
+export class RecipeEditorComponent implements OnInit {
+  @Input() inputRecipeSubject!: ReplaySubject<Recipe> ;
+  inputRecipe!:Recipe ;
 
   listIngredients: string[] = [];
   nameIngredient: string = "";
   recipeForm!: FormGroup;
+  imageName:string = '';
 
   difficultiesKey = Object.keys(Difficulty);
   difficultiesValue = Object.values(Difficulty);
@@ -30,6 +33,8 @@ export class AdministrationComponent implements OnInit {
   unitsValue = Object.values(Unit);
 
   filteredIngredients: Observable<string[]>[] = [];
+  formDataImage!: FormData;
+
 
   constructor(private ingredientService: IngredientService, private recipeService: RecipeService,
     private formbuilder: FormBuilder) { 
@@ -37,17 +42,56 @@ export class AdministrationComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.recipeForm = this.formbuilder.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      ingredients: this.formbuilder.array([], Validators.required),
-      instructions: this.formbuilder.array(["test"], Validators.required),
-      difficulty: ['', Validators.required],
-      serves: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-      cooking: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-      preparation: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-      rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]]
-    });
+    if (!this.inputRecipeSubject){
+      this.recipeForm = this.formbuilder.group({
+        name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+        ingredients: this.formbuilder.array([], Validators.required),
+        instructions: this.formbuilder.array([], Validators.required),
+        difficulty: ['', Validators.required],
+        serves: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+        cooking: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+        preparation: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+        rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]]
+      });
+    }else{
+      this.inputRecipeSubject.subscribe(
+        (res:Recipe) => {
+
+          this.recipeForm = this.formbuilder.group({
+            name: [res.name, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+            ingredients: this.formbuilder.array([], Validators.required),
+            instructions: this.formbuilder.array([], Validators.required),
+            difficulty: [res.difficulty, Validators.required],
+            serves: [res.serves, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            cooking: [res.timeRecipe.cooking, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            preparation: [res.timeRecipe.preparation, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            rest: [res.timeRecipe.rest, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]]
+          });
+
+        this.inputRecipe = res;
+
+        for (let ingredient of res.ingredients){
+          let formGroup: FormGroup = this.formbuilder.group({
+            quantity: [ingredient.quantity, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            unit: [ingredient.unit, Validators.required],
+            name: [ingredient.name, Validators.required],
+            manual: [false]
+          });
+      
+          this.formArrayIngredients().push(formGroup);
+        }
+        for (let instr of res.instructions){
+          this.formArrayInstructions().push(this.formbuilder.control(instr));
+        }
+        
+        });
+    }
   }
+
+  
+
+  
+
 
 
 
@@ -113,6 +157,29 @@ export class AdministrationComponent implements OnInit {
   
   }
 
+
+
+
+  
+
+
+
+  onImageSelected(event:any) {
+
+    const image:File = event.target.files[0];
+
+    if (image) {
+
+        this.imageName = image.name;
+
+        const formData = new FormData();
+
+        formData.append("thumbnail", image);
+
+        this.formDataImage = formData;
+    }
+  }
+
   saveRecipe(): void {
 
     let listIngredientFormGroup = this.formArrayIngredients().value as FormGroup[]
@@ -131,7 +198,15 @@ export class AdministrationComponent implements OnInit {
     ingredients, this.recipeForm.get('instructions')!.value, 
     this.recipeForm.get('difficulty')!.value, 
     this.recipeForm.get('serves')!.value, 
-    0, timeRecipe);
+    0, timeRecipe,this.formDataImage);
+
+    if (this.inputRecipeSubject){
+      this.recipeService.modifyRecipe(this.inputRecipe.nameId,recipe).subscribe();
+    } else{
+      this.recipeService.addRecipe(recipe).subscribe();
+    }
+
+
 
   }
   
