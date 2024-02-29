@@ -1,6 +1,31 @@
 <h1>{{recipe.name}}</h1>
 
-<img src={{recipe.urlImage}} alt="Description de l'image">
+
+<div class="slideshow-container">
+
+    <div *ngFor="let image of imagelist"  class="mySlides fade">
+        <div class="mySlides fade">
+            <img [src]='image' style="width: 100%;" />
+        
+          </div>
+        </div>
+
+
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
+  <br />
+  <div style="text-align: center;">
+    <div *ngFor="let image of imagelist; let index=index;"  class="border width-50 flex-column">
+        <span class="dot" onclick="currentSlide(index)"></span>
+    </div>
+  </div>
+
+
+
+
+
+
 
 
 

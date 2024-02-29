@@ -10,6 +10,9 @@ export class RecipeDTO {
     difficulty!: Difficulty;
     
     isSelected!: boolean;
+    encodeImage! : string[];   
+    image: any;
+    
     
 
 

@@ -10,6 +10,7 @@ import { IngredientService } from 'src/app/services/ingredient.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { map, Observable, ReplaySubject, startWith } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class RecipeEditorComponent implements OnInit {
   listIngredients: string[] = [];
   nameIngredient: string = "";
   recipeForm!: FormGroup;
-  imageName:string = '';
+  encodeImage:string[] = ['','','','',''];
 
   difficultiesKey = Object.keys(Difficulty);
   difficultiesValue = Object.values(Difficulty);
@@ -37,7 +38,7 @@ export class RecipeEditorComponent implements OnInit {
 
 
   constructor(private ingredientService: IngredientService, private recipeService: RecipeService,
-    private formbuilder: FormBuilder) { 
+    private formbuilder: FormBuilder,private router: Router) { 
       this.refreshIngredients();  
     }
 
@@ -164,19 +165,20 @@ export class RecipeEditorComponent implements OnInit {
 
 
 
-  onImageSelected(event:any) {
+  onImageSelected(event:any,id:number) {
 
     const image:File = event.target.files[0];
+    const reader = new FileReader();
 
-    if (image) {
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      console.log(base64String);
+      this.encodeImage[id] = base64String;
+    
+    }
 
-        this.imageName = image.name;
-
-        const formData = new FormData();
-
-        formData.append("thumbnail", image);
-
-        this.formDataImage = formData;
+    if (image){
+      reader.readAsDataURL(image);
     }
   }
 
@@ -190,21 +192,28 @@ export class RecipeEditorComponent implements OnInit {
       ingredients.push(ingredient);
     });
 
-
+    let imageClean: string[] = [];
+    this.encodeImage.forEach((image:string)=> {
+      if (image != "") imageClean.push(image);
+    });
     let timeRecipe: TimeRecipe = new TimeRecipe(this.recipeForm.get('cooking')!.value, this.recipeForm.get('preparation')!.value, this.recipeForm.get('rest')!.value);
-
 
     let recipe: Recipe = new Recipe(this.recipeForm.get('name')!.value, 
     ingredients, this.recipeForm.get('instructions')!.value, 
     this.recipeForm.get('difficulty')!.value, 
     this.recipeForm.get('serves')!.value, 
-    0, timeRecipe,this.formDataImage);
+    0, timeRecipe,imageClean);
 
     if (this.inputRecipeSubject){
-      this.recipeService.modifyRecipe(this.inputRecipe.nameId,recipe).subscribe();
+      this.recipeService.modifyRecipe(this.inputRecipe.nameId,recipe).subscribe(()=> {
+        this.router.navigateByUrl('/home');
+      });
     } else{
-      this.recipeService.addRecipe(recipe).subscribe();
+      this.recipeService.addRecipe(recipe).subscribe(()=> {
+        this.router.navigateByUrl('/home');
+      });
     }
+    
 
 
 

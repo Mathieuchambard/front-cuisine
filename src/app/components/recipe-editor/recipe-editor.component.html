@@ -46,7 +46,11 @@
 
     
     
-    <input type="file" (change)="onImageSelected($event)" >
+    <input type="file" (change)="onImageSelected($event,0)" accept="image/*" >
+    <input type="file" (change)="onImageSelected($event,1)" accept="image/*" >
+    <input type="file" (change)="onImageSelected($event,2)" accept="image/*" >
+    <input type="file" (change)="onImageSelected($event,3)" accept="image/*" >
+    <input type="file" (change)="onImageSelected($event,4)" accept="image/*" >
 
 
       

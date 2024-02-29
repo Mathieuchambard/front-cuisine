@@ -1,13 +1,13 @@
 
-<div class="flex-row width-100 height-100 justify-around">
-  <div *ngFor="let recipe of recipesName"  class="border width-20 height-100 flex-column">
+<div class="recipes flex-row width-100 height-100 justify-around ">
+  <div *ngFor="let recipe of recipesName"  class="border width-20 flex-column">
     <div [routerLink]="'/recette/' + recipe.nameId">
     <h1 class="flex-row justify-center">
       {{ recipe.name }}
     </h1>
 
-  <div class="flex-row justify-center ">
-    <img [src]="'assets/imageRecipe/' + recipe.nameId + '.png'" alt="Description de l'image" class="width-80 ">
+  <div class="flex-row justify-center width-100 height-60">
+    <img [src]='recipe.image[0]' alt="Description de l'image" class="width-80 ">
 
   </div>
 
