@@ -1,6 +1,3 @@
-import { Time } from "@angular/common";
-
-
 import { Difficulty } from "./difficulty.model";
 import { EcologicalBalance } from "./ecologicalBalance.model";
 import { HeatBalance } from "./heatBalance.model";
@@ -10,13 +7,14 @@ import { Nutriscore } from "./nutricescore.model";
 
 
 import { TimeRecipe } from "./timeRecipe.model";
+import { Instruction } from "./instruction";
 
 export class Recipe {
 
     nameId!: string;
     name!: string;
     ingredients!: IngredientDTO[];
-    instructions!: string[];
+    instructions!: Instruction[];
     difficulty!: Difficulty;
     heatBalance!: HeatBalance;
     ecologicalBalance!: EcologicalBalance;
@@ -28,7 +26,7 @@ export class Recipe {
     date!: Date;
     encodeImage!: string[];
 
-    constructor(name: string, ingredients: IngredientDTO[], instructions: string[],
+    constructor(name: string, ingredients: IngredientDTO[], instructions: Instruction[],
         difficulty: Difficulty, serves: number, price: number, timeRecipe: TimeRecipe,encodeImage:string[]) {
             this.name = name;
             this.ingredients = ingredients;

@@ -11,6 +11,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
 import { map, Observable, ReplaySubject, startWith } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Instruction } from 'src/app/model/instruction';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class RecipeEditorComponent implements OnInit {
   listIngredients: string[] = [];
   nameIngredient: string = "";
   recipeForm!: FormGroup;
-  encodeImage:string[] = ['','','','',''];
+  encodeImage:string[] = [];
 
   difficultiesKey = Object.keys(Difficulty);
   difficultiesValue = Object.values(Difficulty);
@@ -47,7 +48,7 @@ export class RecipeEditorComponent implements OnInit {
       this.recipeForm = this.formbuilder.group({
         name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
         ingredients: this.formbuilder.array([], Validators.required),
-        instructions: this.formbuilder.array([], Validators.required),
+        instructions: this.formbuilder.array([]),
         difficulty: ['', Validators.required],
         serves: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
         cooking: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
@@ -61,7 +62,7 @@ export class RecipeEditorComponent implements OnInit {
           this.recipeForm = this.formbuilder.group({
             name: [res.name, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
             ingredients: this.formbuilder.array([], Validators.required),
-            instructions: this.formbuilder.array([], Validators.required),
+            instructions: this.formbuilder.array([]),
             difficulty: [res.difficulty, Validators.required],
             serves: [res.serves, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
             cooking: [res.timeRecipe.cooking, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
@@ -73,7 +74,7 @@ export class RecipeEditorComponent implements OnInit {
 
         for (let ingredient of res.ingredients){
           let formGroup: FormGroup = this.formbuilder.group({
-            quantity: [ingredient.quantity, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            quantity: [ingredient.quantity, [Validators.required, Validators.pattern(/^\d*\.?\d+$/), Validators.min(0)]],
             unit: [ingredient.unit, Validators.required],
             name: [ingredient.name, Validators.required],
             manual: [false]
@@ -81,15 +82,38 @@ export class RecipeEditorComponent implements OnInit {
       
           this.formArrayIngredients().push(formGroup);
         }
+
+
+
+
         for (let instr of res.instructions){
-          this.formArrayInstructions().push(this.formbuilder.control(instr));
+          let formGroup: FormGroup = this.formbuilder.group({
+            ingredients: this.formbuilder.array([]),
+            instructionString: [instr.instructionString, Validators.required]
+          });
+
+          let arrayIngredients = formGroup.get('ingredients') as FormArray;
+
+          for (let ingr of instr.ingredients){
+            let formGroupIngr: FormGroup = this.formbuilder.group({
+              quantity: [ingr.quantity, [Validators.required, Validators.pattern(/^\d*\.?\d+$/), Validators.min(0)]],
+              unit: [ingr.unit, Validators.required],
+              name: [ingr.name, Validators.required],
+              manual: [false]
+            });
+            arrayIngredients.push(formGroupIngr);
+          }
+      
+          this.formArrayInstructions().push(formGroup);
         }
         
         });
     }
   }
 
-  
+  deleteImage(index:number){
+    this.encodeImage.splice(index,1);
+  }
 
   
 
@@ -104,7 +128,7 @@ export class RecipeEditorComponent implements OnInit {
 
   addIngredientRecipe() {
     let formGroup: FormGroup = this.formbuilder.group({
-      quantity: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+      quantity: ['', [Validators.required, Validators.pattern(/^\d*\.?\d+$/), Validators.min(0)]],
       unit: ['g', Validators.required],
       name: ['', Validators.required],
       manual: [false]
@@ -128,6 +152,16 @@ export class RecipeEditorComponent implements OnInit {
     return this.recipeForm.get("ingredients") as FormArray;
   }
 
+  getIngredientsSelected(): String[]{
+    let listIngredient:String[] = [];
+    let listIngredientFormGroup = this.formArrayIngredients().value as FormGroup[];
+    listIngredientFormGroup.forEach((formGroup: any) => {
+      listIngredient.push(formGroup['name']);
+    });
+    return listIngredient;
+  }
+
+
 
   // Gestion des instructions
 
@@ -136,8 +170,48 @@ export class RecipeEditorComponent implements OnInit {
   } 
 
   addInstruction(): void {
-    this.formArrayInstructions().push(this.formbuilder.control(''))
+    let formGroup: FormGroup = this.formbuilder.group({
+      ingredients: this.formbuilder.array([]),
+      instructionString: ['', Validators.required]
+    });
+    this.formArrayInstructions().push(formGroup);
   }
+
+
+  addIngredientInstruction(i:number) :void{
+    let formGroup: FormGroup = this.formbuilder.group({
+      quantity: ['', [Validators.required, Validators.pattern(/^\d*\.?\d+$/), Validators.min(0)]],
+      unit: ['', Validators.required],
+      name: ['', Validators.required],
+      manual: [false]
+    });
+
+    this.formArrayIngredientsInstruction(i).push(formGroup);
+
+  }
+
+  removeIngredientInstruction(indiceInstruction: number,indiceIngredient: number) {
+    this.formArrayIngredientsInstruction(indiceInstruction).removeAt(indiceIngredient);
+  }
+
+  formArrayIngredientsInstruction(i:number) : FormArray {
+
+    const instructionsArray = this.recipeForm.get('instructions') as FormArray;
+
+    const instructionGroup = instructionsArray.at(i) as FormGroup;
+
+    return instructionGroup.get('ingredients') as FormArray;
+  }
+
+  getIngredients(instruction:any ): FormArray{
+    return instruction.controls["ingredients"] as FormArray;
+  }
+
+
+
+
+
+
 
  /**
   * Permet de récupérer la valeur du slide-toggle à partir du FormGroup de l'ingrédient auquel il appartient 
@@ -149,60 +223,40 @@ export class RecipeEditorComponent implements OnInit {
     return ingredientGroup?.get('manual')!.value;
   }
 
-
-
-  addIngredient(): void {
-    this.ingredientService.addIngredient(this.nameIngredient).subscribe(() => {
-      this.refreshIngredients();
-    });
-  
-  }
-
-
-
-
-  
-
-
-
-  onImageSelected(event:any,id:number) {
-
-    const image:File = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const base64String = reader.result as string;
-      console.log(base64String);
-      this.encodeImage[id] = base64String;
+ 
+  onMultipleImageSelected(event:any){
     
-    }
 
-    if (image){
-      reader.readAsDataURL(image);
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file: File = files[i];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+        const base64String = reader.result as string;
+        this.encodeImage.push(base64String); }
+          reader.readAsDataURL(file);
+        }
     }
   }
+
+
+
+
 
   saveRecipe(): void {
 
-    let listIngredientFormGroup = this.formArrayIngredients().value as FormGroup[]
-    let ingredients: IngredientDTO[] = [];
+    let recipe: Recipe = this.recipeForm.value as Recipe;
 
-    listIngredientFormGroup.forEach((formGroup: any) => {
-      let ingredient: IngredientDTO = new IngredientDTO(formGroup['name'], formGroup['quantity'], formGroup['unit']);
-      ingredients.push(ingredient);
-    });
-
+    let timeRecipe: TimeRecipe = new TimeRecipe(this.recipeForm.get('cooking')!.value, this.recipeForm.get('preparation')!.value, this.recipeForm.get('rest')!.value);
+    recipe.timeRecipe = timeRecipe;
     let imageClean: string[] = [];
     this.encodeImage.forEach((image:string)=> {
       if (image != "") imageClean.push(image);
     });
-    let timeRecipe: TimeRecipe = new TimeRecipe(this.recipeForm.get('cooking')!.value, this.recipeForm.get('preparation')!.value, this.recipeForm.get('rest')!.value);
+    recipe.encodeImage = imageClean;
 
-    let recipe: Recipe = new Recipe(this.recipeForm.get('name')!.value, 
-    ingredients, this.recipeForm.get('instructions')!.value, 
-    this.recipeForm.get('difficulty')!.value, 
-    this.recipeForm.get('serves')!.value, 
-    0, timeRecipe,imageClean);
+    console.log(recipe);
 
     if (this.inputRecipeSubject){
       this.recipeService.modifyRecipe(this.inputRecipe.nameId,recipe).subscribe(()=> {

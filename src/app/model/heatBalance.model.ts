@@ -1,10 +1,14 @@
 export interface HeatBalance {
+    energieKcal: number;
+    energieKj: number;
+
     eau: number;
     proteines: number;
     glucides: number;
     sucres: number;
     lipides: number;
-    agSres: number;
+    agSature: number;
+    fibres: number;
     sel: number;
     sodium: number;
     calcium: number;

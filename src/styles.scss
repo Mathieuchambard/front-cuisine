@@ -13,6 +13,16 @@ app-root {
 
 /* Layout */
 
+.text-bold {
+    font-weight: bold;
+  }
+
+  .wrap{
+    flex-wrap: wrap;
+  }
+  
+
+  
 .flex-row {
     display: flex; 
     flex-direction: row;
@@ -33,6 +43,9 @@ app-root {
 
 .justify-between {
     justify-content: space-between;
+}
+.justify-left {
+    justify-content: left;
 }
 
 .align-center {
@@ -67,6 +80,10 @@ app-root {
     width: 80%;
 }
 
+.width-65 {
+    width: 65%;
+}
+
 .width-60 {
     width: 60%;
 }
@@ -77,6 +94,10 @@ app-root {
 
 .width-40 {
     width: 40%;
+}
+
+.width-35 {
+    width: 35%;
 }
 
 .width-30 {
@@ -136,6 +157,10 @@ app-root {
     box-sizing: border-box;
 }
 
+.border{
+    border: 1px solid black;
+}
+
 /* Thème */
 
 .main-background-color {
@@ -143,11 +168,15 @@ app-root {
 }
 
 .second-background-color {
-    background-color: #e8e8e8;
+    background-color: rgb(255,255,255);
 }
 
 .margin {
     margin: 1em;
+}
+
+.margin-right-10{
+    margin-right: 10%;
 }
 
 .mat-form-field-wrapper {

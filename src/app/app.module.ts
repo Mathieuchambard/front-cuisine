@@ -29,6 +29,11 @@ import { CollectionEditorComponent } from './components/CollectionPage/collectio
 import { CollectionModifierComponent } from './components/CollectionPage/collection-modifier/collection-modifier.component';
 import { RecipeModifierComponent } from './components/recipe-modifier/recipe-modifier.component';
 import { RecipeCreatorComponent } from './components/recipe-creator/recipe-creator.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { ApportBarComponent } from './displayComponents/apport-bar/apport-bar.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +51,9 @@ import { RecipeCreatorComponent } from './components/recipe-creator/recipe-creat
     CollectionModifierComponent,
     RecipeModifierComponent,
     RecipeCreatorComponent,
-    RecipeEditorComponent
+    RecipeEditorComponent,
+    ApportBarComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +70,8 @@ import { RecipeCreatorComponent } from './components/recipe-creator/recipe-creat
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatChipsModule,
-    MatFormFieldModule
+    MatFormFieldModule,MatProgressBarModule,
+    MatDialogModule 
 ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,33 @@
 .height-ingredient {
     height: 15em;
 }
+
+.custom-button {
+    background-color:  	rgb(255,105,180); /* Couleur de fond rose */
+    color: white; /* Texte en blanc */
+    width: 20%; /* Largeur de 20% */
+
+  }
+
+  .image-container {
+    position: relative;
+    flex-wrap: wrap;
+    display: inline-block;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+  }
+  
+  .rounded-image {
+    border-radius: 10px; /* Ajustez ce chiffre selon la courbure que vous souhaitez */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  

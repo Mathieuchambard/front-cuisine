@@ -15,7 +15,7 @@ import { RecipeModifierComponent } from './components/recipe-modifier/recipe-mod
 
 
 const routes: Routes = [
-  { path: '',  redirectTo: '/accueil', pathMatch: 'full' }, 
+  { path: '',  redirectTo: '/home', pathMatch: 'full' }, 
   {path: 'recetteCreator', component: RecipeCreatorComponent},
   {path: 'recetteModifier/:id', component: RecipeModifierComponent},
   { path: 'home', component: HomePageComponent },

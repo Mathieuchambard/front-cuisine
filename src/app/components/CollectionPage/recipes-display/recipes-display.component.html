@@ -24,18 +24,17 @@
 
   </div>
 
-</div>
+  </div>
 
-  <button mat-fab color="primary" (click)="pressDelete(recipe.nameId)">
-    <mat-icon>delete</mat-icon>
-  </button>
-  <button mat-mini-fab color="primary" >
-    <a [routerLink]="'/recetteModifier/' + recipe.nameId" >
-      <mat-icon>menu</mat-icon></a>
-  </button>
+    <button mat-fab color="primary" (click)="openConfirmationDialogDelete(recipe)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" (click)="openConfirmationDialogModifier(recipe)" >
+        <mat-icon>menu</mat-icon>
+    </button>
 
 
-</div>
+  </div>
 
 
 

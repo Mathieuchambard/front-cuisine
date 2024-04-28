@@ -3,6 +3,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe } from 'src/app/model/recipe.model';
 import { RecipeService } from 'src/app/services/recipe.service';
+import { Nutriscore } from 'src/app/model/nutricescore.model';
+import { Unit } from 'src/app/model/unit.model';
+import { IngredientDTO } from 'src/app/model/ingredientDTO.model';
+import { HeatBalance } from 'src/app/model/heatBalance.model';
+import { apportRecommande } from 'src/app/const/nutritionRecommande';
 
 
 @Component({
@@ -12,10 +17,20 @@ import { RecipeService } from 'src/app/services/recipe.service';
 })
 export class RecipeComponent implements OnInit {
 
+  unitEnum = Unit;
+  nutriscoreEnum = Nutriscore;
   id: string;
   recipe!: Recipe ;
   imagelist: any = [];
-  slideIndex = 1;
+  slideIndex = 0;
+  actualServes! : number;
+  isSupRecoVisible: boolean = false;
+
+  recommandations: HeatBalance = apportRecommande;
+
+  
+
+  
   
 
   constructor(private route: ActivatedRoute,private recipeService: RecipeService,private _sanitizer: DomSanitizer) { 
@@ -26,39 +41,56 @@ export class RecipeComponent implements OnInit {
   ngOnInit(): void {
     this.recipeService.getRecipe(this.id).subscribe((recipe:Recipe) => {
       this.recipe = recipe;
-      recipe.encodeImage.forEach((encode:string)=> {this.imagelist.push(this._sanitizer.bypassSecurityTrustResourceUrl(encode));})  });
-      this.showSlides(this.slideIndex);
-    }
+      this.actualServes = recipe.serves;
+      this.recipe.ecoScore = Math.round(recipe.ecoScore);
+      recipe.ingredients.forEach((ingredient:IngredientDTO) => {
+        ingredient.unitString = ingredient.unit.toString();
+      });
+    });
+      
   
+    }
+  tronc(x:number):number{
+    return Math.round(x*100)/100;
+  }
+  addServes():void{
+    this.actualServes +=1;
+  }
+
+  deleteCruCuit(name:string){
+    return name.replace(/\b(cru|cuit)\b/g, '');
+  }
+  removeServes():void{
+    this.actualServes -=1;
+    if (this.actualServes == 0){this.actualServes = 1} }
+  
+  goToPrevious(): void {
+    const isFirstSlide = this.slideIndex === 0;
+    const newIndex = isFirstSlide
+      ? this.recipe.encodeImage.length - 1
+      : this.slideIndex - 1;
+  
+    this.slideIndex = newIndex;
+  }
+  
+  goToNext(): void {
+    const isLastSlide = this.slideIndex === this.recipe.encodeImage.length - 1;
+    const newIndex = isLastSlide ? 0 : this.slideIndex + 1;
+  
+    this.slideIndex = newIndex;
+  }
+
+  
+
+  showAdditional(): void {
+    this.isSupRecoVisible = true;
+  }
+
+  hideAdditional(): void {
+    this.isSupRecoVisible = false;
+  }
     
     
 
-  plusSlides(n:number):void {
-    this.showSlides((this.slideIndex += n));
-    }
-
-  currentSlide(n:number):void {
-      this.showSlides((this.slideIndex = n));
-    }
-
-  showSlides(n:number):void {
-      var i;
-      var slides = document.getElementsByClassName("mySlides") as HTMLCollectionOf<HTMLElement>;
-      var dots = document.getElementsByClassName("dot") as HTMLCollectionOf<HTMLElement>;
-      if (n > slides.length) {
-        this.slideIndex = 1;
-      }
-      if (n < 1) {
-        this.slideIndex = slides.length;
-      }
-      for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-      }
-      for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-      }
-      slides[this.slideIndex - 1].style.display = "block";
-      dots[this.slideIndex - 1].className += " active";
-    }
 
 }

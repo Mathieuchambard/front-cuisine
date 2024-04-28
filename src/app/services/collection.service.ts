@@ -18,18 +18,18 @@ export class CollectionService {
   }
 
   getCollection(nameId:string): Observable<Collection>{
-    return this.http.get<Collection>(this.configUrl + "/collection/" + nameId);
+    return this.http.get<Collection>(this.configUrl + "/collections/" + nameId);
   }
 
   postCollection(collection:Collection): Observable<HttpResponse<Collection>> {
-    return this.http.post<HttpResponse<Collection>>(this.configUrl + "/post/collection",collection);
+    return this.http.post<HttpResponse<Collection>>(this.configUrl + "/collections",collection);
   }
 
   modifyCollection(nameId:string,collection:Collection): Observable<HttpResponse<Collection>>{
-    return this.http.put<HttpResponse<Collection>>(this.configUrl + "/modify/collection/"+nameId,collection);
+    return this.http.put<HttpResponse<Collection>>(this.configUrl + "collections/"+nameId,collection);
   }
 
   deleteCollection(nameId:string): Observable<string> {
-    return this.http.delete<string>(this.configUrl + "/deleteCollection/" + nameId);
+    return this.http.delete<string>(this.configUrl + "/collections/" + nameId);
   }
 }

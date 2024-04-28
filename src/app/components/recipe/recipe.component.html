@@ -1,48 +1,196 @@
-<h1>{{recipe.name}}</h1>
+
+<ng-template #oneItem>
+    <div>
+        <img class="slide" [src]='recipe.encodeImage[slideIndex]' alt="Description de l'image" class="width-80 ">
+    </div>
+  </ng-template>
+
+<div class="flex-column marge-top align-center">
+
+<div class="flex-row justify-around width-80">
+    <div class = "width-35">
+        <div class="slider image-container"> <!-- Image -->
+            <div *ngIf="recipe.encodeImage.length > 1; else oneItem">
+                <div (click)="goToPrevious()" class="leftArrow">❰</div>
+                <div (click)="goToNext()" class="rightArrow">❱</div>
+                <img class="slide" [src]='recipe.encodeImage[slideIndex]' alt="Description de l'image" >
+                
+            </div>
+        </div>
+    </div>
+    <div class="width-65 flex-column text-center"> <!-- Information Recette -->
+        <h1>{{recipe.name}}</h1>
+        <div class="flex-row justify-around "> <!-- Timer -->
+            <div class="width-20 flex-row justify-center  align-center"><img src="assets/iconCook/prep.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.timeRecipe.preparation}} min</div></div>
+            <div class="width-20 flex-row justify-center  align-center"><img src="assets/iconCook/cook.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.timeRecipe.cooking}} min</div></div>
+            <div class="width-20 flex-row justify-center  align-center"><img src="assets/iconCook/rest.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.timeRecipe.rest}} min</div></div>
+
+        </div>
+        <div class = "flex-row justify-center text-center align-center"> <!-- Nombres personnes recette -->
+            <div class="width-25">{{actualServes}} personnes</div>
+                <button class ="icon-display" mat-fab color="primary" (click)="removeServes()">
+                <mat-icon>remove_circle</mat-icon>
+                </button>
+                <button  class ="icon-display" mat-fab color="primary" (click)="addServes()">
+                    <mat-icon >add_circle</mat-icon>
+                  </button>
+                  
+        </div>
+        <div class = "flex-row justify-center">
+            <div class = "width-50"> <!-- Nutriscore -->
+                <div [ngSwitch]="recipe.nutriscore" >
+                    <div *ngSwitchCase="nutriscoreEnum.A"><img src="assets/Nutriscore/640px-Nutri-score-A.png" alt="Description de l'image" class="width-60"></div>
+                    <div *ngSwitchCase="nutriscoreEnum.B"><img src="assets/Nutriscore/640px-Nutri-score-B.png" alt="Description de l'image" class="width-60"></div>
+                    <div *ngSwitchCase="nutriscoreEnum.C"><img src="assets/Nutriscore/640px-Nutri-score-C.png" alt="Description de l'image" class="width-60"></div>
+                    <div *ngSwitchCase="nutriscoreEnum.D"><img src="assets/Nutriscore/640px-Nutri-score-D.png" alt="Description de l'image" class="width-60"></div>
+                    <div *ngSwitchCase="nutriscoreEnum.E"><img src="assets/Nutriscore/640px-Nutri-score-E.png" alt="Description de l'image" class="width-60"></div>
+                    <div *ngSwitchDefault></div>
+                </div>
+            </div>
+            <div class ="width-50 flex-column"> <!-- EcoScore -->
+                <div>EcoScore :</div> 
+                <div>{{recipe.ecoScore}}/100</div>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
-<div class="slideshow-container">
+<!-- Bas de la recette -->
+<div class="flex-column width-100 align-center">
 
-    <div *ngFor="let image of imagelist"  class="mySlides fade">
-        <div class="mySlides fade">
-            <img [src]='image' style="width: 100%;" />
+    <div class="flex-column width-80 border marge-all align-center" > <!-- Nutriment -->
+        <div class = "width-80  marge-all"> <!-- Calorie -->
+            Calorie : {{tronc(recipe.heatBalance.energieKcal) }} Kcal / {{recommandations.energieKcal}} Kcal
+            <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.energieKcal/recommandations.energieKcal)"></app-apport-bar>
+       </div>
+        <div class="width-100 flex-row justify-around marge-all">
+            <div class = "width-25 flex-column "> <!-- Protéine/Fibres -->
+                <div class="width-90 "> <!-- Protéine -->
+                    Protéines : {{tronc(recipe.heatBalance.proteines) }} g / {{recommandations.proteines}} g
+                    <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.proteines/recommandations.proteines)"></app-apport-bar>
+                </div>
+                <div class="width-90 "> <!-- Fibres -->
+                    Fibres : {{tronc(recipe.heatBalance.fibres) }} g / {{recommandations.fibres}} g
+                    <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.fibres/recommandations.fibres)"></app-apport-bar>
+                </div>
+            </div>
+            <div class = "width-25 flex-column"> <!-- Glucides/Sucres -->
+                <div class="width-90 "> <!-- Glucides -->
+                    Glucides : {{tronc(recipe.heatBalance.glucides) }} g / {{recommandations.glucides}} g
+                    <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.glucides/recommandations.glucides)"></app-apport-bar>
+                </div>
+                <div class="width-90 "> <!-- Sucres -->
+                    Sucres : {{tronc(recipe.heatBalance.sucres) }} g / {{recommandations.sucres}} g
+                    <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.sucres/recommandations.sucres)"></app-apport-bar>
+                </div>
+            </div>
+            <div class = "width-25 flex-column"> <!-- Lipides/AgSat -->
+                <div class="width-90 "> <!-- Lipides -->
+                    Lipides : {{tronc(recipe.heatBalance.lipides) }} g / {{recommandations.lipides}} g
+                    <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.lipides/recommandations.lipides)"></app-apport-bar>
+                </div>
+                <div class="width-90 "> <!-- Acide-gras Saturés -->
+                    Lipides saturés : {{tronc(recipe.heatBalance.agSature) }} g / {{recommandations.agSature}} g
+                    <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.agSature/recommandations.agSature)"></app-apport-bar>
+                </div>
+            </div>
+            <div class = "width-5 flex-column justify-center"> <!-- See more -->
+                <mat-icon (mouseenter)="showAdditional()" (mouseleave)="hideAdditional()">input</mat-icon>
+
+                <div class="popup width-15 justify" *ngIf="isSupRecoVisible">
+                    <div class="width-90 "> <!-- Sel -->
+                        Sel : {{tronc(recipe.heatBalance.sel) }} g / {{recommandations.sel}} g
+                        <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.sel/recommandations.sel)"></app-apport-bar>
+                    </div>
+                    <div class="width-90 "> <!-- Calcium -->
+                        Calcium : {{tronc(recipe.heatBalance.calcium) }} mg / {{recommandations.calcium}} mg
+                        <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.calcium/recommandations.calcium)"></app-apport-bar>
+                    </div>
+                    <div class="width-90 "> <!-- Fer -->
+                        Fer : {{tronc(recipe.heatBalance.fer) }} mg / {{recommandations.fer}} mg
+                        <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.fer/recommandations.fer)"></app-apport-bar>
+                    </div>
+                    <div class="width-90 "> <!-- Vitamine C -->
+                        Vitamine C : {{tronc(recipe.heatBalance.vitamineC) }} mg / {{recommandations.vitamineC}} mg
+                        <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.vitamineC/recommandations.vitamineC)"></app-apport-bar>
+                    </div>
+                    <div class="width-90 "> <!-- Vitamine D -->
+                        Vitamine D : {{tronc(recipe.heatBalance.vitamineD) }} mg / {{recommandations.vitamineD}} mg
+                        <app-apport-bar [percentage]="tronc(100*recipe.heatBalance.vitamineD/recommandations.vitamineD)"></app-apport-bar>
+                    </div>
+                </div>
         
-          </div>
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+
+
+
+
+  
+
+
+<div class="flex-row marge-all justify-left width-80 wrap">
+
+    <div *ngFor="let ingredient of recipe.ingredients" class="width-20 flex-column align-center ingrMain">
+
+        <img  class="width-80 circular-image " [src]='ingredient.encodeImage' alt="Description de l'image" >
+
+        <div [ngSwitch]="ingredient.unitString" class="text-bold"> <!-- grammage -->
+            <div *ngSwitchCase="'CL'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} cl </div>
+            <div *ngSwitchCase="'G'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} g </div>
+            <div *ngSwitchCase="'CAS'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.s</div>
+            <div *ngSwitchCase="'CAC'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.c </div>
+            <div *ngSwitchCase="'NUMBER'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} </div>
+            <div *ngSwitchCase="'NONE'"></div>
+
+            <div *ngSwitchDefault></div>
         </div>
 
+        <div> {{deleteCruCuit(ingredient.name)}}</div>
 
-    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-    <a class="next" onclick="plusSlides(1)">&#10095;</a>
-  </div>
-  <br />
-  <div style="text-align: center;">
-    <div *ngFor="let image of imagelist; let index=index;"  class="border width-50 flex-column">
-        <span class="dot" onclick="currentSlide(index)"></span>
+      </div>
+      
+
+</div>
+
+<div class="flex-column marge-all justify-around width-60">
+    <div *ngFor="let instruction of recipe.instructions; let i = index" class="justify-left marge-all">
+        <div class="text-bold">
+            Etape {{i+1}} 
+        </div>
+        <div class ="flex-row ">
+            <div *ngFor="let ingredient of instruction.ingredients" class="flex-column align-center width-15 ingrRecipe">
+                
+                    <div [ngSwitch]="ingredient.unit" class=""> <!-- grammage -->
+                        <div *ngSwitchCase="'CL'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} cl </div>
+                        <div *ngSwitchCase="'G'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} g </div>
+                        <div *ngSwitchCase="'CAS'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.s</div>
+                        <div *ngSwitchCase="'CAC'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.c </div>
+                        <div *ngSwitchCase="'NUMBER'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} </div>
+                        <div *ngSwitchCase="'NONE'"></div>
+            
+                        <div *ngSwitchDefault></div>
+                    </div>
+
+                <div>{{deleteCruCuit(ingredient.name)}}</div>
+                
+                
+            </div>
+
+        </div>
+        <div>
+            {{ instruction.instructionString }}
+        </div>
+        
     </div>
-  </div>
+</div>
 
 
 
-
-
-
-
-
-
-Difficulté : {{recipe.difficulty}}
-Nombres de personnes : {{recipe.serves}}
-Temps de préparation : {{recipe.timeRecipe.preparation}} min
-Temps de cuisson : {{recipe.timeRecipe.cooking}} min
-Temps Repos : {{recipe.timeRecipe.rest}} min
-
-<ul>
-    <li *ngFor="let ingredient of recipe.ingredients">
-        {{ ingredient.name }} : {{ ingredient.quantity }}{{ ingredient.unit }}
-    </li>
-    </ul>
-
-<ul>
-<li *ngFor="let instruction of recipe.instructions">
-    {{ instruction }}
-</li>
-</ul>
+</div> 

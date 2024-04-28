@@ -45,12 +45,18 @@
     </div>
 
     
+    <input type="file" (change)="onMultipleImageSelected($event)" accept="image/*"  multiple>
+    <div class="flex-row width-80 wrap">
+        <div *ngFor="let image of encodeImage; let i = index" class="width-20 image-container">
+
+            <img [src]='image' alt="Image" class="width-100 rounded-image">
+            <button class="close-button" (click)="deleteImage(i)">&times;</button>
+              
+
+      </div>
+    </div>
+      
     
-    <input type="file" (change)="onImageSelected($event,0)" accept="image/*" >
-    <input type="file" (change)="onImageSelected($event,1)" accept="image/*" >
-    <input type="file" (change)="onImageSelected($event,2)" accept="image/*" >
-    <input type="file" (change)="onImageSelected($event,3)" accept="image/*" >
-    <input type="file" (change)="onImageSelected($event,4)" accept="image/*" >
 
 
       
@@ -86,38 +92,6 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                
-
-                    <!--
-
-                    <div class="flex-column width-30 justify-center align-center">
-                        <span class="text-center">Sélection manuelle</span>
-                        <mat-slide-toggle formControlName="manual"></mat-slide-toggle>
-                    </div>
-
-                    <div *ngIf="!getManualValue(formArrayIngredients().controls[i]);then selectInput else classicInput" class="width-60"></div>
-
-
-                     
-                    <ng-template #selectInput>
-                        <mat-form-field appearance="outline" class="width-100">
-                            <mat-label>Aliment</mat-label>
-                            <mat-select formControlName="name" name="name">
-                                <mat-option *ngFor="let ingredient of listIngredients" [value]="ingredient">
-                                {{ ingredient }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </ng-template>
-                    <ng-template #classicInput>
-                        <mat-form-field appearance="outline" class="width-100">
-                            <mat-label>Aliment</mat-label>
-                            <input matInput
-                            formControlName="name">
-                        </mat-form-field>
-                    </ng-template>
-
-                -->
                 </div>                
                 <button mat-mini-fab color="accent" (click)="removeIngredientRecipe(i)" class="small-icon-button align-center">
                     <mat-icon>
@@ -136,29 +110,84 @@
     </div>
 
 
-    <div class="flex-column width-80 align-center margin">
+    <div class="flex-column width-80 align-center margin" formArrayName = "instructions">
         <h3>Liste des instructions</h3>
 
-        <div *ngFor="let instruction of formArrayInstructions().controls; index as i" class="flex-row justify-around width-100" formArrayName="instructions">
+        <div *ngFor="let instruction of formArrayInstructions().controls; index as iInstr" [formGroupName] = "iInstr" class="justify-around width-100">
+            <div class="text-bold">Etape {{ iInstr + 1 }}
+
+            </div>
+
+            <button mat-mini-fab color="accent" (click)="addIngredientInstruction(iInstr)"> <!-- Add Ingredient in instruction -->
+                <mat-icon>
+                    add
+                </mat-icon> 
+            </button>
+
+
+
+            
+            <div formArrayName = "ingredients"> 
+            <div *ngFor="let ingredient of getIngredients(instruction).controls; let iIngr = index" [formGroupName]="iIngr" class="flex-row justify-around width-100 align-center">
+                <mat-form-field appearance="outline" class="width-20"> <!-- Quantité-->
+                    <mat-label>Quantité</mat-label>
+                    <input matInput type="number"
+                    formControlName="quantity">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="width-20"> <!-- Unité-->
+                    <mat-label>Unité</mat-label>
+                    <mat-select formControlName="unit" name="unit">
+                        <mat-option *ngFor="let unit of unitsValue; index as j" [value]="unitsKey[j]">
+                        {{ unit }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="flex-row justify-center width-40"> <!-- Ingrédient-->
+                    <mat-form-field appearance="outline" class="width-100">
+                        <mat-label>Ingrédient</mat-label>
+                        <input type="text"
+                                matInput
+                                formControlName="name"
+                                [matAutocomplete]="auto">
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            <mat-option *ngFor="let ingredient of getIngredientsSelected()" [value]="ingredient">
+                                {{ ingredient }}
+                              </mat-option>
+                        </mat-autocomplete>
+                        </mat-form-field>
+                </div> 
+                <button mat-mini-fab color="accent" (click)="removeIngredientInstruction(iInstr,iIngr)" class="small-icon-button align-center">
+                    <mat-icon>
+                        delete
+                    </mat-icon>
+                </button>
+
+            </div> 
+            </div>
+
             <mat-form-field appearance="outline" class="width-100">
-                <mat-label>Etape {{ i + 1 }}</mat-label>
-                <textarea matInput [formControlName]="i"
+                <mat-label>A compléter</mat-label>
+                <textarea matInput formControlName="instructionString"
                           cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="150"></textarea>
-              </mat-form-field>
+                        cdkAutosizeMaxRows="150"></textarea>
+            </mat-form-field>
+            
+
+
+
+
         </div>
 
-        <button mat-mini-fab color="accent" (click)="addInstruction()">
-            <mat-icon>
-                add
-            </mat-icon>
+        <button type="button" class="custom-button" (click)="addInstruction()"> <!-- Add Instruction -->
+            Ajouter une instruction
         </button>
 
     </div>
+    
+    <button mat-raised-button (click)="saveRecipe()" [disabled]="!recipeForm.valid" class="margin">Sauvegarder</button> 
 
-    <button mat-raised-button (click)="saveRecipe()" [disabled]="!recipeForm.valid" class="margin">Sauvegarder</button>
 
 </div>
 
