@@ -10,6 +10,7 @@ import { RecipeDTO } from '../model/RecipeDTO.model';
 export class RecipeService {
 
 
+  //configUrl = 'http://vps-ebb3514f.vps.ovh.net:8080';
   configUrl = 'http://localhost:8080';
   pre = `${this.configUrl}/recipe`
 

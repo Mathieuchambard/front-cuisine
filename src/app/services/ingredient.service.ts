@@ -10,6 +10,7 @@ import { of } from 'rxjs';
 export class IngredientService {
 
 
+  //configUrl = 'http://vps-ebb3514f.vps.ovh.net:8080';
   configUrl = 'http://localhost:8080';
   listIngredients: string[] = [];
 
