@@ -10,7 +10,6 @@ import { RecipeDTO } from '../model/RecipeDTO.model';
 export class RecipeService {
 
 
-  //configUrl = 'http://vps-ebb3514f.vps.ovh.net:8080';
   configUrl = 'http://localhost:8080';
   pre = `${this.configUrl}/recipe`
 
@@ -18,6 +17,9 @@ export class RecipeService {
 
   getAllRecipes(): Observable<RecipeDTO[]> {
     return this.http.get<RecipeDTO[]>( `${this.pre}`);
+  }
+  getRecipesSearch(nameSearch:String): Observable<RecipeDTO[]> {
+    return this.http.get<RecipeDTO[]>( `${this.pre}/search/${nameSearch}`);
   }
 
   getRecipe(name:string) : Observable<Recipe>{

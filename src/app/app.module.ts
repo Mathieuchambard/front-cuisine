@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,7 +17,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
-import { RecipesDisplayComponent } from './components/CollectionPage/recipes-display/recipes-display.component';
+import { RecipesDisplayComponent } from './components/recipes-display/recipes-display.component';
 import { CollectionsDisplayComponent } from './components/CollectionPage/collections-display/collections-display.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { CreateCollectionComponent } from './components/CollectionPage/create-collection/create-collection.component';
@@ -33,6 +33,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { ApportBarComponent } from './displayComponents/apport-bar/apport-bar.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { SearchComponent } from './search/search.component';
+import { IngredientCreatorComponent } from './components/ingredient-creator/ingredient-creator.component';
+
 
 @NgModule({
   declarations: [
@@ -53,7 +56,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     RecipeCreatorComponent,
     RecipeEditorComponent,
     ApportBarComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    SearchComponent,
+    IngredientCreatorComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatAutocompleteModule,
     MatChipsModule,
     MatFormFieldModule,MatProgressBarModule,
-    MatDialogModule 
+    MatDialogModule,
+    MatCheckboxModule
 ],
   providers: [],
   bootstrap: [AppComponent]

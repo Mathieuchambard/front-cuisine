@@ -1,11 +1,23 @@
-.header {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width:20%;
-    background-color: black;
-    color: white;
-    height: 100%;
-    
-  }
+
+
+a {
+  color: #9b5c2c; /* Couleur beige */
+  text-decoration: none; /* Enlève le soulignement par défaut */
+}
+
+a:hover, a:active {
+  color: #9b5c2c; /* Garde la couleur beige au survol et au clic */
+  text-decoration: none; /* Pas de soulignement au survol ou au clic */
+  background-color: transparent; /* Évite le fond qui brille */
+}
+
+.search-bar input {
+  padding: 5px 10px; /* Espacement intérieur du champ de recherche */
+  border: 1px solid #ccc; /* Bordure légère */
+  border-radius: 4px; /* Coins arrondis */
+}
+
+.nav-links h1 {
+  display: inline-block; /* Les titres sont en ligne */
+  margin: 0 15px; /* Espacement entre les liens */
+}

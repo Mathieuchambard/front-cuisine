@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Ingredient } from '../model/ingredient.model';
 import { of } from 'rxjs';
+import {Recipe} from "../model/recipe.model";
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,15 @@ import { of } from 'rxjs';
 export class IngredientService {
 
 
-  //configUrl = 'http://vps-ebb3514f.vps.ovh.net:8080';
   configUrl = 'http://localhost:8080';
+  pre = `${this.configUrl}/ingredients`
   listIngredients: string[] = [];
 
   constructor(private http: HttpClient) {}
 
   getAllIngredients(): Observable<string[]> {
     if (this.listIngredients.length == 0) {
-      const obsIngredients: Observable<string[]> = this.http.get<string[]>(this.configUrl + "/ingredients");
+      const obsIngredients: Observable<string[]> = this.http.get<string[]>( `${this.pre}`);
       obsIngredients.subscribe((ingredients: string[]) => {
         this.listIngredients = ingredients;
       });
@@ -28,11 +29,9 @@ export class IngredientService {
     }
   }
 
-  deleteIngredientByName(name: string): Observable<any> {
-    return this.http.delete(this.configUrl + `/ingredient/${name}`);
+
+  addIngredient(ingredient: Ingredient): Observable<any> {
+    return this.http.post(`${this.pre}`, ingredient);
   }
 
-  addIngredient(name: string): Observable<any> {
-    return this.http.post(this.configUrl + "/ingredient", { "name": name });
-  }
 }

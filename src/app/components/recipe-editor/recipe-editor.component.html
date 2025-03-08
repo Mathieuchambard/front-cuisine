@@ -41,7 +41,14 @@
                 <input matInput
                         formControlName="rest">
             </mat-form-field>
-        </div> 
+        </div>
+
+        <div formArrayName="tags">
+            <label *ngFor="let tag of availableTags; let i = index">
+                <input type="checkbox" [formControlName]="i"> {{ tag }}
+            </label>
+        </div>
+
     </div>
 
     
@@ -183,6 +190,40 @@
         <button type="button" class="custom-button" (click)="addInstruction()"> <!-- Add Instruction -->
             Ajouter une instruction
         </button>
+
+
+        <mat-form-field appearance="outline" class="width-100">
+            <mat-label>L'astuce du chef:</mat-label>
+            <textarea matInput formControlName="astuceChef"
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="150"></textarea>
+        </mat-form-field>
+
+
+
+
+        <h3>Multiple selection</h3>
+        <p>
+            <mat-form-field>
+                <mat-select [formControl]="recipeMultiCtrl" placeholder="Banks" [multiple]="true" #multiSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="recipeMultiFilterCtrl"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let bank of filteredRecipesMulti | async" [value]="bank">
+                        {{bank}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </p>
+        <p>
+            Selected Banks:
+        </p>
+        <ul *ngFor="let string of recipeMultiCtrl?.value">
+            <li>{{string}}</li>
+        </ul>
+
 
     </div>
     

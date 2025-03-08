@@ -1,0 +1,17 @@
+
+
+.recipes{
+    flex-wrap:wrap;
+    justify-content: space-around;
+    align-content: space-around;
+
+    }
+
+
+.trait-separateur {
+    border: none; /* Supprime la bordure par défaut */
+    height: 2px; /* Épaisseur du trait */
+    background-color: #D2B48C; /* Marron léger (tan) */
+    width: 80%; /* Largeur du trait */
+    margin: 20px auto; /* Espacement au-dessus et en dessous + centrage */
+}

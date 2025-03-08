@@ -1,10 +1,16 @@
-<div class="header">
-    <img class= "width-50" src="assets/logo.png" alt="Logo Miam Miam">
-    <h1>Miam Miam</h1>
-    <nav>
-        <ul>
-            <li><a [routerLink]="'/home'">A la une</a></li>
-            <li><a [routerLink]="'/collections'">Collections</a></li>
-            <li><a [routerLink]="'/recettes'">Recettes</a></li>
-        </ul>
-    </nav>
+<div class="width-100 align-center justify-between flex-row header second-background-color">
+    <div class="search-bar width-20 medium-margin">
+        <input
+                type="text"
+                [(ngModel)]="searchQuery"
+                (keyup.enter)="onSearch()"
+                placeholder="Rechercher des recettes"
+        />
+    </div>
+
+    <div class="nav-links width-30 medium-margin">
+        <h1><a [routerLink]="'/home'">A la une</a></h1>
+        <h1><a [routerLink]="'/collections'">Collections</a></h1>
+        <h1><a [routerLink]="'/recettes'">Recettes</a></h1>
+    </div>
+</div>

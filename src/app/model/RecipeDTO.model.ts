@@ -7,7 +7,9 @@ export class RecipeDTO {
     name!: string;
     timeRecipe!: TimeRecipe;
     nutriscore!:Nutriscore;
+    ecoScore!: number;
     difficulty!: Difficulty;
+    ingredients!: string;
     
     isSelected!: boolean;
     encodeImage! : string[];   

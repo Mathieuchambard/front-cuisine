@@ -1,0 +1,58 @@
+
+<div class="recipes flex-column width-100 justify-around ">
+  <div *ngFor="let recipe of recipesName"  class=" width-100">
+      <div [routerLink]="'/recette/' + recipe.nameId" class="flex-column">
+          <div class="width-100 flex-row">
+              <div class="width-20 justify-center align-center">
+                  <img [src]='recipe.image[0]' alt="Description de l'image" class="width-80 ">
+              </div>
+              <div class="justify-center width-80 flex-column">
+                  <h1 class="justify-center">
+                      Recette de {{ recipe.name }}
+                  </h1>
+
+                  <div class = "flex-row">
+                      <div class = "width-30"> <!-- Nutriscore -->
+                          <div [ngSwitch]="recipe.nutriscore" >
+                              <div *ngSwitchCase="nutriscoreEnum.A"><img src="../../../assets/Nutriscore/640px-Nutri-score-A.png" alt="Description de l'image" class="width-20"></div>
+                              <div *ngSwitchCase="nutriscoreEnum.B"><img src="../../../assets/Nutriscore/640px-Nutri-score-B.png" alt="Description de l'image" class="width-20"></div>
+                              <div *ngSwitchCase="nutriscoreEnum.C"><img src="../../../assets/Nutriscore/640px-Nutri-score-C.png" alt="Description de l'image" class="width-20"></div>
+                              <div *ngSwitchCase="nutriscoreEnum.D"><img src="../../../assets/Nutriscore/640px-Nutri-score-D.png" alt="Description de l'image" class="width-20"></div>
+                              <div *ngSwitchCase="nutriscoreEnum.E"><img src="../../../assets/Nutriscore/640px-Nutri-score-E.png" alt="Description de l'image" class="width-20"></div>
+                              <div *ngSwitchDefault></div>
+                          </div>
+                      </div>
+                      <div class ="width-30 "> <!-- EcoScore -->
+                          <div>EcoScore : {{recipe.ecoScore}}/100</div>
+                      </div>
+                  </div>
+
+                  <div class="flex-row justify-around width-40"> <!-- Timer -->
+                      <div class="width-30 flex-row justify-center  align-center"><img src="../../../assets/iconCook/prep.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.timeRecipe.preparation}} min</div></div>
+                      <div class="width-30 flex-row justify-center  align-center"><img src="../../../assets/iconCook/cook.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.timeRecipe.cooking}} min</div></div>
+                      <div class="width-30 flex-row justify-center  align-center"><img src="../../../assets/iconCook/rest.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.timeRecipe.rest}} min</div></div>
+                      <div class="width-30 flex-row justify-center  align-center"><img src="../../../assets/iconCook/toque.png" alt="Description de l'image" class="width-30 margin-right-10"> <div > {{recipe.difficulty}}</div></div>
+                  </div>
+
+                  <div class="flex-row justify-around width-40"> <!-- Timer -->
+                  </div>
+
+
+
+              </div>
+
+          </div>
+          <div class="width-100"> Ingrédients: {{deleteCruCuit(recipe.ingredients)}}</div>
+
+
+
+      </div>
+
+      <hr class="trait-separateur">
+
+
+
+
+
+  </div>
+</div>

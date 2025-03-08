@@ -190,7 +190,14 @@
         
     </div>
 </div>
+<div *ngIf="recipe.astuceChef" class="flex-column marge-all justify-around width-60">
+    Astuce du chef : {{ recipe.astuceChef }}
+</div>
 
+
+<div *ngIf="recipe.recipeWith.length > 0" class="flex-row marge-all justify-around width-60">
+    Recettes associées : {{ recipe.recipeWith.join(', ') }}
+</div>
 
 
 </div> 

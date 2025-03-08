@@ -24,10 +24,15 @@ export class Recipe {
     price!: number;
     timeRecipe!: TimeRecipe;
     date!: Date;
+    tag!: string[];
+    recipeWith!: string[];
+    astuceChef!: string;
     encodeImage!: string[];
 
+
+
     constructor(name: string, ingredients: IngredientDTO[], instructions: Instruction[],
-        difficulty: Difficulty, serves: number, price: number, timeRecipe: TimeRecipe,encodeImage:string[]) {
+        difficulty: Difficulty, serves: number, price: number, timeRecipe: TimeRecipe,encodeImage:string[],tag:string[],recipeWith:string[],astuceChef:string) {
             this.name = name;
             this.ingredients = ingredients;
             this.instructions = instructions;
@@ -35,6 +40,9 @@ export class Recipe {
             this.serves = serves;
             this.price = price;
             this.timeRecipe = timeRecipe;
+            this.tag = tag;
+            this.recipeWith = recipeWith;
+            this.astuceChef = astuceChef ;
             this.encodeImage = encodeImage;
         }
 

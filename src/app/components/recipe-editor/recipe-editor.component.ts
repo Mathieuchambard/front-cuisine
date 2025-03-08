@@ -1,17 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Difficulty, getDifficultyByValue } from 'src/app/model/difficulty.model';
-import { Ingredient } from 'src/app/model/ingredient.model';
-import { IngredientDTO } from 'src/app/model/ingredientDTO.model';
 import { Recipe } from 'src/app/model/recipe.model';
 import { TimeRecipe } from 'src/app/model/timeRecipe.model';
-import { getUnitByValue, Unit } from 'src/app/model/unit.model';
+import {  Unit } from 'src/app/model/unit.model';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { RecipeService } from 'src/app/services/recipe.service';
-import { map, Observable, ReplaySubject, startWith } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {map, Observable, ReplaySubject, startWith, Subject, take, takeUntil} from 'rxjs';
 import { Router } from '@angular/router';
-import { Instruction } from 'src/app/model/instruction';
+import { MatSelect } from '@angular/material/select';
+
 
 
 @Component({
@@ -22,6 +20,8 @@ import { Instruction } from 'src/app/model/instruction';
 export class RecipeEditorComponent implements OnInit {
   @Input() inputRecipeSubject!: ReplaySubject<Recipe> ;
   inputRecipe!:Recipe ;
+
+  availableTags = ["Entrée", "Plat", "Dessert", "Accompagnement","Recette du quotidien","Produit de base fait maison"];
 
   listIngredients: string[] = [];
   nameIngredient: string = "";
@@ -36,14 +36,58 @@ export class RecipeEditorComponent implements OnInit {
 
   filteredIngredients: Observable<string[]>[] = [];
   formDataImage!: FormData;
+  tagControls!: any;
+
+  /** list of recipes */
+  protected recipes: String[] = ["Pizza","Saucisse","oui"];
+
+  /** control for the selected recipe for multi-selection */
+  public recipeMultiCtrl: FormControl<string[]> = new FormControl<string[]>([], { nonNullable: true });
+
+  /** control for the MatSelect filter keyword multi-selection */
+  public recipeMultiFilterCtrl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
+
+
+  /** list of recipes filtered by search keyword */
+  public filteredRecipesMulti: ReplaySubject<String[]> = new ReplaySubject<String[]>(1);
+
+  @ViewChild('multiSelect', { static: true }) multiSelect!: MatSelect;
+
+  /** Subject that emits when the component has been destroyed. */
+  protected _onDestroy = new Subject<void>();
 
 
   constructor(private ingredientService: IngredientService, private recipeService: RecipeService,
     private formbuilder: FormBuilder,private router: Router) { 
-      this.refreshIngredients();  
+      this.refreshIngredients();
     }
 
+  ngAfterViewInit() {
+    this.setInitialValue();
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+
+
   ngOnInit(): void {
+    //this.bankMultiCtrl.setValue([this.banks[10], this.banks[11], this.banks[12]]);
+
+    // load the initial bank list
+    this.filteredRecipesMulti.next(this.recipes.slice());
+
+    // listen for search field value changes
+    this.recipeMultiFilterCtrl.valueChanges
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(() => {
+          this.filterRecipesMulti();
+        });
+
+
+
     if (!this.inputRecipeSubject){
       this.recipeForm = this.formbuilder.group({
         name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -53,12 +97,18 @@ export class RecipeEditorComponent implements OnInit {
         serves: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
         cooking: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
         preparation: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-        rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]]
+        rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+        tags: this.formbuilder.array([]),
+        recipeWith: this.formbuilder.array([]),
+        astuceChef: ['']
       });
+      // Initialisation des cases à cocher avec des FormControls
+      this.tagControls = this.availableTags.map(tag => new FormControl(false));
+      this.recipeForm.setControl('tags', this.formbuilder.array(this.tagControls));
     }else{
       this.inputRecipeSubject.subscribe(
         (res:Recipe) => {
-
+          this.tagControls = this.availableTags.map(tag => new FormControl(res.tag.includes(tag)));
           this.recipeForm = this.formbuilder.group({
             name: [res.name, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
             ingredients: this.formbuilder.array([], Validators.required),
@@ -67,9 +117,14 @@ export class RecipeEditorComponent implements OnInit {
             serves: [res.serves, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
             cooking: [res.timeRecipe.cooking, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
             preparation: [res.timeRecipe.preparation, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
-            rest: [res.timeRecipe.rest, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]]
+            rest: [res.timeRecipe.rest, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            tags: this.formbuilder.array(this.tagControls),
+            recipeWith: this.formbuilder.array([]),
+            astuceChef: [res.astuceChef]
           });
 
+
+        this.encodeImage = res.encodeImage;
         this.inputRecipe = res;
 
         for (let ingredient of res.ingredients){
@@ -115,7 +170,36 @@ export class RecipeEditorComponent implements OnInit {
     this.encodeImage.splice(index,1);
   }
 
-  
+  protected setInitialValue() {
+    this.filteredRecipesMulti
+        .pipe(take(1), takeUntil(this._onDestroy))
+        .subscribe(() => {
+          // setting the compareWith property to a comparison function
+          // triggers initializing the selection according to the initial value of
+          // the form control (i.e. _initializeSelection())
+          // this needs to be done after the filteredBanks are loaded initially
+          // and after the mat-option elements are available
+          this.multiSelect.compareWith = (a: String, b: String) => a && b && a === b;
+        });
+  }
+
+  protected filterRecipesMulti() {
+    if (!this.recipes) {
+      return;
+    }
+    // get the search keyword
+    let search = this.recipeMultiFilterCtrl.value;
+    if (!search) {
+      this.filteredRecipesMulti.next(this.recipes.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredRecipesMulti.next(
+        this.recipes.filter(name => name.toLowerCase().indexOf(search) > -1)
+    );
+  }
 
 
 
@@ -246,7 +330,13 @@ export class RecipeEditorComponent implements OnInit {
 
   saveRecipe(): void {
 
+
     let recipe: Recipe = this.recipeForm.value as Recipe;
+
+
+    recipe.tag = this.recipeForm.value.tags
+        .map((checked: boolean, i: number) => checked ? this.availableTags[i] : null)
+        .filter((tag: string | null): tag is string => tag !== null);
 
     let timeRecipe: TimeRecipe = new TimeRecipe(this.recipeForm.get('cooking')!.value, this.recipeForm.get('preparation')!.value, this.recipeForm.get('rest')!.value);
     recipe.timeRecipe = timeRecipe;
@@ -256,7 +346,6 @@ export class RecipeEditorComponent implements OnInit {
     });
     recipe.encodeImage = imageClean;
 
-    console.log(recipe);
 
     if (this.inputRecipeSubject){
       this.recipeService.modifyRecipe(this.inputRecipe.nameId,recipe).subscribe(()=> {
@@ -282,11 +371,6 @@ export class RecipeEditorComponent implements OnInit {
     })
   }
 
-  deleteIngredientByName(name: string): void {
-    this.ingredientService.deleteIngredientByName(name).subscribe(() => {
-      this.refreshIngredients();
-    });
-  }
 
 
 
