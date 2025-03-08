@@ -1,0 +1,167 @@
+<div class="flex-column justify-center align-center" [formGroup]="ingredientForm">
+    <div class="flex-column width-100 justify-center align-center margin">
+        <mat-form-field appearance="outline" class="width-50">
+            <mat-label>Nom de l'ingredient</mat-label>
+            <input matInput
+                   formControlName="name">
+        </mat-form-field>
+
+        <input type="file" (change)="onFileSelected($event)" accept="image/*">
+        <img *ngIf="image" [src]="image" alt="Aperçu de l'image" style="max-width: 300px; display: block; margin-top: 10px;">
+
+        <div class="width-100">
+            <mat-form-field appearance="outline" class="width-30">
+                <mat-label>Poids en grammes d'une unité:</mat-label>
+                <input matInput type="number"
+                       formControlName="unitTogramme">
+            </mat-form-field>
+        </div>
+
+        <div class="flex-row width-100 justify-between">
+            <div class="flex-column width-100">
+                Équilibre Nutritionnel:
+                <div formGroupName="heatBalance" class="flex-row wrap justify-between width-100">
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Énergie (kcal/100g) :</mat-label>
+                        <input matInput type="number"
+                               formControlName="energieKcal">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Énergie (Kj/100g) :</mat-label>
+                        <input matInput type="number"
+                               formControlName="energieKj">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Eau (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="eau">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Protéines (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="proteines">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Glucides (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="glucides">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Sucres (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="sucres">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Lipides (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="lipides">
+                    </mat-form-field>
+
+
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Dont saturés (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="agSature">
+                    </mat-form-field>
+
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Fibres(g/100g) :</mat-label>
+                        <input matInput type="number"
+                               formControlName="fibres">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Sel (g/100g) :</mat-label>
+                        <input matInput type="number"
+                               formControlName="sel">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Sodium (mg/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="sodium">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Calcium (mg/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="calcium">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>Fer (g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="fer">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>VitamineD (&micro;g/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="vitamineD">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="width-30">
+                        <mat-label>VitamineC (mg/100g):</mat-label>
+                        <input matInput type="number"
+                               formControlName="vitamineC">
+                    </mat-form-field>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="width-100">
+            Restrictions Alimentaires:
+            <div class="width-100 justify-around flex-row">
+                <label>
+                    <input type="checkbox" formControlName="glutenFree"> Sans gluten
+                </label>
+
+                <label>
+                    <input type="checkbox" formControlName="pregnantPermission"> Autorisé pour femmes enceintes
+                </label>
+
+                <label>
+                    <input type="checkbox" formControlName="vegan"> Végan
+                </label>
+            </div>
+        </div>
+
+
+        <button mat-raised-button (click)="saveIngredient()" [disabled]="!ingredientForm.valid" class="margin">Sauvegarder</button>
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
