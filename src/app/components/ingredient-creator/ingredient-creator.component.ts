@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Ingredient} from "../../model/ingredient.model";
 import {IngredientService} from "../../services/ingredient.service";
-import {RecipeService} from "../../services/recipe.service";
 import {Router} from "@angular/router";
 
 @Component({

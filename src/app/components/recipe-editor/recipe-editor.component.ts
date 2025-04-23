@@ -1,6 +1,6 @@
 import { Component, Input, OnInit,ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Difficulty, getDifficultyByValue } from 'src/app/model/difficulty.model';
+import { Difficulty } from 'src/app/model/difficulty.model';
 import { Recipe } from 'src/app/model/recipe.model';
 import { TimeRecipe } from 'src/app/model/timeRecipe.model';
 import {  Unit } from 'src/app/model/unit.model';
@@ -8,8 +8,14 @@ import { IngredientService } from 'src/app/services/ingredient.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import {map, Observable, ReplaySubject, startWith, Subject, take, takeUntil} from 'rxjs';
 import { Router } from '@angular/router';
-import { MatSelect } from '@angular/material/select';
+import {RecipeDTO} from "../../model/RecipeDTO.model";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
 
+
+import {MatDialog} from "@angular/material/dialog";
+import {CropperComponent} from "../../cropper/cropper.component";
+import {UnitServes} from "../../model/unitServes.model";
 
 
 @Component({
@@ -21,70 +27,107 @@ export class RecipeEditorComponent implements OnInit {
   @Input() inputRecipeSubject!: ReplaySubject<Recipe> ;
   inputRecipe!:Recipe ;
 
+  recipesName: RecipeDTO[] =[];
+
   availableTags = ["Entrée", "Plat", "Dessert", "Accompagnement","Recette du quotidien","Produit de base fait maison"];
 
   listIngredients: string[] = [];
-  nameIngredient: string = "";
   recipeForm!: FormGroup;
   encodeImage:string[] = [];
 
   difficultiesKey = Object.keys(Difficulty);
   difficultiesValue = Object.values(Difficulty);
 
+  unitServesKey = Object.keys(UnitServes);
+  unitServesValue = Object.values(UnitServes);
+
   unitsKey = Object.keys(Unit);
   unitsValue = Object.values(Unit);
 
   filteredIngredients: Observable<string[]>[] = [];
-  formDataImage!: FormData;
   tagControls!: any;
 
-  /** list of recipes */
-  protected recipes: String[] = ["Pizza","Saucisse","oui"];
+  recipes: string[] = [];
+  recipeCtrl = new FormControl('');
+  selectedRecipes: string[] = [];
+  filteredRecipes!: Observable<string[]>;
+  table: { [p: string]: string } = {};
 
-  /** control for the selected recipe for multi-selection */
-  public recipeMultiCtrl: FormControl<string[]> = new FormControl<string[]>([], { nonNullable: true });
-
-  /** control for the MatSelect filter keyword multi-selection */
-  public recipeMultiFilterCtrl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
-
-
-  /** list of recipes filtered by search keyword */
-  public filteredRecipesMulti: ReplaySubject<String[]> = new ReplaySubject<String[]>(1);
-
-  @ViewChild('multiSelect', { static: true }) multiSelect!: MatSelect;
-
-  /** Subject that emits when the component has been destroyed. */
-  protected _onDestroy = new Subject<void>();
-
-
-  constructor(private ingredientService: IngredientService, private recipeService: RecipeService,
-    private formbuilder: FormBuilder,private router: Router) { 
-      this.refreshIngredients();
-    }
-
-  ngAfterViewInit() {
-    this.setInitialValue();
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.recipes.filter(recipe => recipe.toLowerCase().includes(filterValue));
   }
 
-  ngOnDestroy() {
-    this._onDestroy.next();
-    this._onDestroy.complete();
+  // Ajouter une recette via l'autocomplete
+  selectRecipe(event: MatAutocompleteSelectedEvent): void {
+    const recipe = event.option.viewValue;
+    if (!this.selectedRecipes.includes(recipe)) {
+      this.selectedRecipes.push(recipe);
+    }
+    this.recipeCtrl.setValue('');
+  }
+
+  // Ajouter une recette via la saisie manuelle
+  addRecipe(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value && !this.selectedRecipes.includes(value)) {
+      this.selectedRecipes.push(value);
+    }
+    event.chipInput!.clear();
+    this.recipeCtrl.setValue('');
+  }
+
+  // Supprimer une recette
+  removeRecipe(recipe: string): void {
+    const index = this.selectedRecipes.indexOf(recipe);
+    if (index >= 0) {
+      this.selectedRecipes.splice(index, 1);
+    }
+  }
+
+  constructor(private ingredientService: IngredientService, private recipeService: RecipeService,
+    private formbuilder: FormBuilder,private router: Router,public dialog: MatDialog) {
+      this.refreshIngredients();
+      this.filteredRecipes = this.recipeCtrl.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._filter(value || ''))
+      );
+    }
+
+  isSaveDisabled(): boolean {
+    return !this.recipeForm.valid || this.encodeImage.length === 0;
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(CropperComponent, {
+      width: '50vw', // 50% de la largeur de la fenêtre
+      height: '35vw', // Hauteur égale à la largeur
+    });
+
+
+    dialogRef.afterClosed().subscribe((croppedImage: string) => {
+      if (croppedImage) {
+        this.encodeImage.push(croppedImage); // Ajoute l'image à la liste
+      }
+    });
   }
 
 
 
   ngOnInit(): void {
-    //this.bankMultiCtrl.setValue([this.banks[10], this.banks[11], this.banks[12]]);
 
-    // load the initial bank list
-    this.filteredRecipesMulti.next(this.recipes.slice());
+    this.recipeService.getAllRecipes().subscribe((recipesName:RecipeDTO[]) => {
+      this.recipesName = recipesName;
+      this.recipes = recipesName.map(recipe => recipe.name); // Extraction des noms
+      this.table = this.recipesName.reduce((acc, recipe) => {
+        acc[recipe.name] = recipe.nameId;
+        return acc;
+      }, {} as { [key: string]: any }); // Dictionnaire name => nameID
 
-    // listen for search field value changes
-    this.recipeMultiFilterCtrl.valueChanges
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe(() => {
-          this.filterRecipesMulti();
-        });
+    });
+
+
 
 
 
@@ -95,6 +138,7 @@ export class RecipeEditorComponent implements OnInit {
         instructions: this.formbuilder.array([]),
         difficulty: ['', Validators.required],
         serves: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+        unitServes: ['', Validators.required],
         cooking: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
         preparation: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
         rest: ['', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
@@ -108,6 +152,12 @@ export class RecipeEditorComponent implements OnInit {
     }else{
       this.inputRecipeSubject.subscribe(
         (res:Recipe) => {
+          this.selectedRecipes = res.recipeWith.flatMap(element => {
+            return Object.keys(this.table).filter(key => this.table[key] === element);
+          });
+
+          
+
           this.tagControls = this.availableTags.map(tag => new FormControl(res.tag.includes(tag)));
           this.recipeForm = this.formbuilder.group({
             name: [res.name, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -115,6 +165,7 @@ export class RecipeEditorComponent implements OnInit {
             instructions: this.formbuilder.array([]),
             difficulty: [res.difficulty, Validators.required],
             serves: [res.serves, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
+            unitServes: [res.unitServes, Validators.required],
             cooking: [res.timeRecipe.cooking, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
             preparation: [res.timeRecipe.preparation, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
             rest: [res.timeRecipe.rest, [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0)]],
@@ -170,41 +221,98 @@ export class RecipeEditorComponent implements OnInit {
     this.encodeImage.splice(index,1);
   }
 
-  protected setInitialValue() {
-    this.filteredRecipesMulti
-        .pipe(take(1), takeUntil(this._onDestroy))
-        .subscribe(() => {
-          // setting the compareWith property to a comparison function
-          // triggers initializing the selection according to the initial value of
-          // the form control (i.e. _initializeSelection())
-          // this needs to be done after the filteredBanks are loaded initially
-          // and after the mat-option elements are available
-          this.multiSelect.compareWith = (a: String, b: String) => a && b && a === b;
-        });
+
+  moveIngredientUp( iIngr: number) {
+    const ingredients = this.formArrayIngredients() as FormArray;
+    if (iIngr > 0) {
+      const current = ingredients.at(iIngr);
+      const prev = ingredients.at(iIngr - 1);
+
+      // Échange les valeurs
+      const currentValue = current.value;
+      const prevValue = prev.value;
+
+      current.setValue(prevValue);
+      prev.setValue(currentValue);
+    }
+  }
+  moveIngredientDown(iIngr: number) {
+
+    const ingredients = this.formArrayIngredients() as FormArray;
+    if (iIngr < ingredients.length - 1) {
+      const current = ingredients.at(iIngr);
+      const next = ingredients.at(iIngr + 1);
+
+      // Clone les valeurs des deux FormGroups
+      const currentValue = current.value;
+      const nextValue = next.value;
+
+      // Échange les valeurs
+      current.setValue(nextValue);
+      next.setValue(currentValue);
+    }
   }
 
-  protected filterRecipesMulti() {
-    if (!this.recipes) {
-      return;
+  moveIngredientInstructionDown(instruction: AbstractControl, index: number) {
+    const ingredients = this.getIngredients(instruction) as FormArray;
+    if (index < ingredients.length - 1) {
+      const current = ingredients.at(index);
+      const next = ingredients.at(index + 1);
+
+      // Clone les valeurs des deux FormGroups
+      const currentValue = current.value;
+      const nextValue = next.value;
+
+      // Échange les valeurs
+      current.setValue(nextValue);
+      next.setValue(currentValue);
     }
-    // get the search keyword
-    let search = this.recipeMultiFilterCtrl.value;
-    if (!search) {
-      this.filteredRecipesMulti.next(this.recipes.slice());
-      return;
-    } else {
-      search = search.toLowerCase();
-    }
-    // filter the banks
-    this.filteredRecipesMulti.next(
-        this.recipes.filter(name => name.toLowerCase().indexOf(search) > -1)
-    );
   }
 
 
 
+  moveIngredientInstructionUp(instruction: AbstractControl, index: number) {
+    const ingredients = this.getIngredients(instruction) as FormArray;
+    if (index > 0) {
+      const current = ingredients.at(index);
+      const prev = ingredients.at(index - 1);
 
-  private _filter(value: string): string[] {
+      // Échange les valeurs
+      const currentValue = current.value;
+      const prevValue = prev.value;
+
+      current.setValue(prevValue);
+      prev.setValue(currentValue);
+    }
+  }
+
+
+
+  moveInstructionUp(index: number) {
+    const instructions = this.formArrayInstructions();
+    if (index > 0) {
+      const current = instructions.at(index);
+      const prev = instructions.at(index - 1);
+
+      instructions.setControl(index, prev);
+      instructions.setControl(index - 1, current);
+    }
+  }
+
+  moveInstructionDown(index: number) {
+    const instructions = this.formArrayInstructions();
+    if (index < instructions.length - 1) {
+      const current = instructions.at(index);
+      const next = instructions.at(index + 1);
+
+      instructions.setControl(index, next);
+      instructions.setControl(index + 1, current);
+    }
+  }
+
+
+
+  private _filter_ingr(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.ingredientService.listIngredients.filter((option: string) => option.toLowerCase().includes(filterValue)).map((value: string) => value);
   }
@@ -220,7 +328,7 @@ export class RecipeEditorComponent implements OnInit {
 
     this.filteredIngredients.push(formGroup.get('name')!.valueChanges.pipe(
       startWith(''),
-      map((value: string) => this._filter(value || '')),
+      map((value: string) => this._filter_ingr(value || '')),
     ));
 
     this.formArrayIngredients().push(formGroup);
@@ -231,13 +339,16 @@ export class RecipeEditorComponent implements OnInit {
     this.filteredIngredients.splice(indice, 1);
 
   }
+  removeInstructionRecipe(iInstr: number) {
+    this.formArrayInstructions().removeAt(iInstr);
+  }
 
   formArrayIngredients() : FormArray {
     return this.recipeForm.get("ingredients") as FormArray;
   }
 
-  getIngredientsSelected(): String[]{
-    let listIngredient:String[] = [];
+  getIngredientsSelected(): string[]{
+    let listIngredient:string[] = [];
     let listIngredientFormGroup = this.formArrayIngredients().value as FormGroup[];
     listIngredientFormGroup.forEach((formGroup: any) => {
       listIngredient.push(formGroup['name']);
@@ -294,44 +405,10 @@ export class RecipeEditorComponent implements OnInit {
 
 
 
-
-
-
- /**
-  * Permet de récupérer la valeur du slide-toggle à partir du FormGroup de l'ingrédient auquel il appartient 
-  * @param ingredientControl ingredient 
-  * @returns la valeur du FormControl manual d'un ingrédient
-  */  
-  
-  getManualValue(ingredientGroup: AbstractControl | null): boolean | null {
-    return ingredientGroup?.get('manual')!.value;
-  }
-
- 
-  onMultipleImageSelected(event:any){
-    
-
-    const files: FileList = event.target.files;
-    if (files && files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        const file: File = files[i];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-        const base64String = reader.result as string;
-        this.encodeImage.push(base64String); }
-          reader.readAsDataURL(file);
-        }
-    }
-  }
-
-
-
-
-
   saveRecipe(): void {
-
-
     let recipe: Recipe = this.recipeForm.value as Recipe;
+
+    recipe.recipeWith = this.selectedRecipes.map(recipe => {return this.table[recipe];});
 
 
     recipe.tag = this.recipeForm.value.tags
@@ -345,7 +422,6 @@ export class RecipeEditorComponent implements OnInit {
       if (image != "") imageClean.push(image);
     });
     recipe.encodeImage = imageClean;
-
 
     if (this.inputRecipeSubject){
       this.recipeService.modifyRecipe(this.inputRecipe.nameId,recipe).subscribe(()=> {

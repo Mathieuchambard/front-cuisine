@@ -4,7 +4,6 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { Collection } from 'src/app/model/collection.model';
-import { Recipe } from 'src/app/model/recipe.model';
 import { RecipeDTO } from 'src/app/model/RecipeDTO.model';
 import { CollectionService } from 'src/app/services/collection.service';
 import { RecipeService } from 'src/app/services/recipe.service';

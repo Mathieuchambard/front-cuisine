@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { Collection } from 'src/app/model/collection.model';
-import { Recipe } from 'src/app/model/recipe.model';
 import { CollectionService } from 'src/app/services/collection.service';
 
 @Component({

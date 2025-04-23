@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-import { Collection } from 'src/app/model/collection.model';
-
 
 @Component({
   selector: 'app-create-collection',

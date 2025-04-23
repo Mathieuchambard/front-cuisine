@@ -70,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "cuisine-front:build:production"
+              "buildTarget": "cuisine-front:build:production"
             },
             "development": {
-              "browserTarget": "cuisine-front:build:development"
+              "buildTarget": "cuisine-front:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +81,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cuisine-front:build"
+            "buildTarget": "cuisine-front:build"
           }
         },
         "test": {

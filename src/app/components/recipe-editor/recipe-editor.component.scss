@@ -1,33 +1,176 @@
 .height-ingredient {
     height: 15em;
 }
+image-cropper {
+  width: 400px; /* Largeur du cropper */
+  height: 400px; /* Hauteur du cropper */
+}
 
-.custom-button {
-    background-color:  	rgb(255,105,180); /* Couleur de fond rose */
-    color: white; /* Texte en blanc */
-    width: 20%; /* Largeur de 20% */
 
-  }
 
-  .image-container {
-    position: relative;
-    flex-wrap: wrap;
-    display: inline-block;
-    margin-left: 2.5%;
-    margin-right: 2.5%;
-  }
+.image-container {
+  position: relative;
+  flex-wrap: wrap;
+  display: inline-block;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
   
-  .rounded-image {
-    border-radius: 10px; /* Ajustez ce chiffre selon la courbure que vous souhaitez */
+.rounded-image {
+  border-radius: 10px; /* Ajustez ce chiffre selon la courbure que vous souhaitez */
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.ingredient-row {
+  display: flex;
+  align-items: center; /* Centrage vertical */
+  justify-content: center; /* Espacement entre les éléments */
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Disposition en colonne pour les petits écrans */
+    align-items: stretch; /* Étirement des éléments pour occuper toute la largeur */
+    justify-content: center; /* Centrage vertical des éléments dans la colonne */
   }
-  
-  .close-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
+}
+.order-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: center; /* Centrage des boutons haut/bas */
+}
+
+.form-fields {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    flex: 1 1 30%;
+    min-width: 120px;
   }
-  
+}
+
+
+
+.delete-button {
+  background-color: #F5E8D9; /* optionnel pour un style homogène */
+  margin-left: auto;
+}
+
+.delete-button mat-icon {
+  color: #9b5c2c;
+}
+
+
+.add-instruction-button {
+  background-color: #F5E8D9 !important;
+  color: #9b5c2c !important;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+
+
+
+
+.instruction-card {
+  width: 100%;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.instruction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.instruction-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.instruction-controls button {
+  margin-left: 0.3rem;
+}
+
+.instruction-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.instruction-textarea {
+  width: 100%;
+}
+
+
+.ingredient-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ingredient-field {
+  width: 120px;
+}
+
+.ingredient-name-field {
+  flex: 1;
+}
+
+.arrow-button mat-icon {
+  color: #9b5c2c;
+  transition: opacity 0.3s ease;
+}
+
+.arrow-button:disabled mat-icon {
+  opacity: 0.3;
+}
+
+
+.add-ingredient-container {
+  margin-top: 1rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #F5E8D9 !important;
+    color: #9b5c2c !important;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+}
+
+
