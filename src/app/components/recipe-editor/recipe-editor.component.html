@@ -7,16 +7,16 @@
         </mat-form-field>
 
         <div class="flex-row justify-around width-100">
-            
-           
+
             <mat-form-field appearance="outline" class="width-20">
                 <mat-label>Difficulté</mat-label>
                 <mat-select formControlName="difficulty" name="difficulty">
                     <mat-option *ngFor="let difficulty of difficultiesValue; index as i" [value]="difficultiesKey[i]">
-                    {{ difficulty }}
+                        {{ difficulty }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+
             <mat-form-field appearance="outline" class="width-20">
                 <mat-label>Nombre de personnes</mat-label>
                 <input matInput
