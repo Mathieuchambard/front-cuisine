@@ -1,0 +1,10 @@
+.temp-responsive{
+  width: 60%;
+
+}
+
+@media screen and (max-width: 800px){
+  .temp-responsive{
+    width: 95%;
+  }
+}

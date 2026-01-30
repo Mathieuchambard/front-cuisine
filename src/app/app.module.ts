@@ -41,6 +41,7 @@ import { SearchComponent } from './search/search.component';
 import { IngredientCreatorComponent } from './components/ingredient-creator/ingredient-creator.component';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import {CropperComponent} from "./cropper/cropper.component";
+import {YogaComponent} from "./yoga/yoga.component";
 
 @NgModule({
   declarations: [
@@ -80,15 +81,15 @@ import {CropperComponent} from "./cropper/cropper.component";
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatChipsModule,
-    MatFormFieldModule,MatProgressBarModule,
+    MatFormFieldModule, MatProgressBarModule,
     MatDialogModule,
     MatCheckboxModule,
     MatButtonModule,
     MatInputModule,
     MatListModule,
     NgxMatSelectSearchModule,
-    ImageCropperComponent
-],
+    ImageCropperComponent, YogaComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

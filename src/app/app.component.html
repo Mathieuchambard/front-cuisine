@@ -1,8 +1,8 @@
 <div class="flex-column width-100 height-100 align-center main-background-color ">
-        <div class="second-background-color width-100 height-10 header">
+        <div *ngIf="showHeader" class="second-background-color width-100 height-10 header">
             <app-header></app-header>
         </div>
-        <div class="main-background-color width-60 height-90 app">
+        <div class="main-background-color temp-responsive height-90 app">
             <router-outlet ></router-outlet>
         </div>
 

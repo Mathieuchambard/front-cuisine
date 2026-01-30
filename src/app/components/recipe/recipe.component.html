@@ -132,32 +132,56 @@
 
 
 
-  
 
 
-<div class="flex-row marge-all justify-left width-80 wrap">
 
-    <div *ngFor="let ingredient of recipe.ingredients" class="width-20 flex-column align-center ingrMain">
+    <div *ngIf="recipe.ingredients">
 
-        <img  class="width-80 circular-image " [src]='ingredient.encodeImage' alt="Description de l'image" >
+        <!-- Si une seule clé -->
+        <ng-container *ngIf="Object.keys(recipe.ingredients).length === 1; else multipleKeys">
+            <div class="flex-row marge-all justify-left width-80 wrap">
+                <div *ngFor="let ingredient of recipe.ingredients[Object.keys(recipe.ingredients)[0]]"
+                     class="width-20 flex-column align-center ingrMain">
+                    <img class="width-80 circular-image" [src]="ingredient.encodeImage" alt="Description de l'image">
+                    <div [ngSwitch]="ingredient.unitString" class="text-bold">
+                        <div *ngSwitchCase="'CL'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} cl </div>
+                        <div *ngSwitchCase="'G'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} g </div>
+                        <div *ngSwitchCase="'CAS'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.s</div>
+                        <div *ngSwitchCase="'CAC'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.c </div>
+                        <div *ngSwitchCase="'NUMBER'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} </div>
+                        <div *ngSwitchCase="'NONE'"></div>
+                        <div *ngSwitchDefault></div>
+                    </div>
+                    <div> {{deleteCruCuit(ingredient.name)}} </div>
+                </div>
+            </div>
+        </ng-container>
 
-        <div [ngSwitch]="ingredient.unitString" class="text-bold"> <!-- grammage -->
-            <div *ngSwitchCase="'CL'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} cl </div>
-            <div *ngSwitchCase="'G'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} g </div>
-            <div *ngSwitchCase="'CAS'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.s</div>
-            <div *ngSwitchCase="'CAC'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.c </div>
-            <div *ngSwitchCase="'NUMBER'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} </div>
-            <div *ngSwitchCase="'NONE'"></div>
+        <!-- Si plusieurs clés -->
+        <ng-template #multipleKeys>
+            <div *ngFor="let key of Object.keys(recipe.ingredients)" class="encadre">
+                <h3>{{ key }}</h3>
+                <div class="flex-row marge-all justify-left width-80 wrap">
+                    <div *ngFor="let ingredient of recipe.ingredients[key]"
+                         class="width-20 flex-column align-center ingrMain">
+                        <img class="width-80 circular-image" [src]="ingredient.encodeImage" alt="Description de l'image">
+                        <div [ngSwitch]="ingredient.unitString" class="text-bold">
+                            <div *ngSwitchCase="'CL'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} cl </div>
+                            <div *ngSwitchCase="'G'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} g </div>
+                            <div *ngSwitchCase="'CAS'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.s</div>
+                            <div *ngSwitchCase="'CAC'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} c.a.c </div>
+                            <div *ngSwitchCase="'NUMBER'"> {{tronc(actualServes/recipe.serves* ingredient.quantity) }} </div>
+                            <div *ngSwitchCase="'NONE'"></div>
+                            <div *ngSwitchDefault></div>
+                        </div>
+                        <div> {{deleteCruCuit(ingredient.name)}} </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
 
-            <div *ngSwitchDefault></div>
-        </div>
+    </div>
 
-        <div> {{deleteCruCuit(ingredient.name)}}</div>
-
-      </div>
-      
-
-</div>
 
 <div class="flex-column marge-all justify-around width-60">
     <div *ngFor="let instruction of recipe.instructions; let i = index" class="justify-left marge-all">

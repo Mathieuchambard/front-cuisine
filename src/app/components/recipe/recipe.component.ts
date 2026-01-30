@@ -37,19 +37,22 @@ export class RecipeComponent implements OnInit {
     
     this.id = this.route.snapshot.paramMap.get('id')!;
   }
-
   ngOnInit(): void {
-    this.recipeService.getRecipe(this.id).subscribe((recipe:Recipe) => {
+    this.recipeService.getRecipe(this.id).subscribe((recipe: Recipe) => {
       this.recipe = recipe;
       this.actualServes = recipe.serves;
       this.recipe.ecoScore = Math.round(recipe.ecoScore);
-      recipe.ingredients.forEach((ingredient:IngredientDTO) => {
-        ingredient.unitString = ingredient.unit.toString();
+
+      // Parcours de toutes les listes d'ingrédients dans la Map
+      Object.values(recipe.ingredients).forEach((ingredientList: IngredientDTO[]) => {
+        ingredientList.forEach((ingredient: IngredientDTO) => {
+          ingredient.unitString = ingredient.unit.toString();
+        });
       });
     });
-      
-  
-    }
+  }
+
+
   tronc(x:number):number{
     return Math.round(x*100)/100;
   }
@@ -89,8 +92,7 @@ export class RecipeComponent implements OnInit {
   hideAdditional(): void {
     this.isSupRecoVisible = false;
   }
-    
-    
 
 
+    protected readonly Object = Object;
 }

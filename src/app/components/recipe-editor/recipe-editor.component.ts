@@ -178,6 +178,7 @@ export class RecipeEditorComponent implements OnInit {
         this.encodeImage = res.encodeImage;
         this.inputRecipe = res;
 
+        /*
         for (let ingredient of res.ingredients){
           let formGroup: FormGroup = this.formbuilder.group({
             quantity: [ingredient.quantity, [Validators.required, Validators.pattern(/^\d*\.?\d+$/), Validators.min(0)]],
@@ -187,7 +188,7 @@ export class RecipeEditorComponent implements OnInit {
           });
       
           this.formArrayIngredients().push(formGroup);
-        }
+        }*/
 
 
 

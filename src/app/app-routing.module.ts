@@ -13,6 +13,11 @@ import { RecipeCreatorComponent } from './components/recipe-creator/recipe-creat
 import { RecipeModifierComponent } from './components/recipe-modifier/recipe-modifier.component';
 import {SearchComponent} from './search/search.component';
 import {IngredientCreatorComponent} from "./components/ingredient-creator/ingredient-creator.component";
+import {YogaComponent} from "./yoga/yoga.component";
+import {SportComponent} from "./sport/sport.component";
+import {HomepageEnceinteComponent} from "./cours-enceinte/homepage-enceinte/homepage-enceinte.component";
+import {EnFormeApresBebeComponent} from "./cours-enceinte/en-forme-apres-bebe/en-forme-apres-bebe.component";
+import {EnceinteEnFormeComponent} from "./cours-enceinte/enceinte-en-forme/enceinte-en-forme.component";
 
 
 const routes: Routes = [
@@ -28,7 +33,12 @@ const routes: Routes = [
   { path: 'collection/:id', component: CollectionComponent  },
   { path: 'collection/:id', component: CollectionComponent  },
   { path: 'collections', component: CollectionsDisplayComponent  },
-  { path: 'ingredientCreator', component: IngredientCreatorComponent }
+  { path: 'ingredientCreator', component: IngredientCreatorComponent },
+  { path: 'yoga', component: YogaComponent },
+  { path: 'sport', component: SportComponent },
+  { path: 'homepage-enceinte', component: HomepageEnceinteComponent },
+  { path: 'en-forme-apres-bebe', component: EnFormeApresBebeComponent },
+  { path: 'enceinte-en-forme', component: EnceinteEnFormeComponent },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

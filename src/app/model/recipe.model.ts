@@ -14,7 +14,7 @@ export class Recipe {
 
     nameId!: string;
     name!: string;
-    ingredients!: IngredientDTO[];
+    ingredients!: Record<string, IngredientDTO[]>;
     instructions!: Instruction[];
     difficulty!: Difficulty;
     heatBalance!: HeatBalance;
@@ -33,7 +33,7 @@ export class Recipe {
 
 
 
-    constructor(name: string, ingredients: IngredientDTO[], instructions: Instruction[],
+    constructor(name: string, ingredients: Record<string, IngredientDTO[]>, instructions: Instruction[],
         difficulty: Difficulty, serves: number,unitServes: UnitServes, price: number, timeRecipe: TimeRecipe,encodeImage:string[],tag:string[],recipeWith:string[],astuceChef:string) {
             this.name = name;
             this.ingredients = ingredients;
