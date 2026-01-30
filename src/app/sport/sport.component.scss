@@ -1,0 +1,166 @@
+.sport-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.columns {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.column {
+  flex: 1;
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.column h2 {
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+li.selected {
+  border: 2px solid #007bff;
+}
+
+button {
+  margin-top: 5px;
+  padding: 6px 12px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+
+
+
+.search-section {
+  .search-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // 3 colonnes
+    gap: 1rem;
+  }
+
+  .course-card {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .course-card.selected {
+    background-color: #d0f0fd;
+    border-color: #0b87d0;
+  }
+
+  .actions {
+    margin-top: 1rem;
+    button {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.scrollable-list {
+  max-height: 400px; /* hauteur maximale visible */
+  overflow-y: auto; /* active la barre de défilement verticale */
+  padding-right: 5px;
+}
+
+.scrollable-list ul {
+  margin: 0;
+  padding: 0;
+}
+
+.scrollable-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.more-indicator {
+  text-align: center;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 8px;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+}
+
+.users-container {
+  display: flex;
+  gap: 20px; /* espace entre les colonnes */
+}
+
+.user-column {
+  flex: 1; /* chaque colonne prend la moitié de la largeur */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.cours-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+

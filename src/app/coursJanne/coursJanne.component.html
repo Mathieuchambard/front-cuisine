@@ -1,0 +1,36 @@
+<div class="coursJanne-page">
+  <div class="video-list">
+    <div class="video-card" *ngFor="let video of videos; let i = index">
+
+      <h3 class="video-title">{{ video.titre }}</h3>
+
+      <div class="video-info">
+        <div class="info-item"><strong>Date :</strong> {{ video.date }}</div>
+      </div>
+
+      <!-- Zone vidéo -->
+      <div class="video-container">
+        <ng-container *ngIf="!video.loaded">
+          <div class="video-placeholder" (click)="playVideo(video, i)" role="button" tabindex="0">
+            <img [src]="video.minia" [alt]="video.titre + ' miniature'" class="video-thumb" />
+            <div class="play-overlay">▶</div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="video.loaded">
+          <video
+            id="video-{{i}}"
+            width="100%"
+            controls
+            autoplay
+            playsinline
+            preload="metadata">
+            <source [src]="video.file" type="video/mp4" />
+            Votre navigateur ne supporte pas la vidéo.
+          </video>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</div>

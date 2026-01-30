@@ -1,0 +1,118 @@
+<div class="sport-container">
+    <div class="columns">
+        <!-- Cours de Mathieu -->
+        <div class="column">
+            <h2>Cours de Mathieu</h2>
+            <div class="scrollable-list">
+                <ul>
+                    <li *ngFor="let course of mathieuCourses">
+                        <div>
+                            <strong>{{ course.name }}</strong><br>
+                            {{ course.date }} à {{ course.time }}<br>
+                            <em>{{ course.status }}</em>
+                        </div>
+                        <button (click)="unregister('mathieu', course.id)">Se désinscrire</button>
+                    </li>
+                </ul>
+            </div>
+            <div *ngIf="mathieuCourses.length > 4" class="more-indicator">
+                Faites défiler pour voir plus ↓
+            </div>
+        </div>
+
+        <!-- Cours de Janne -->
+        <div class="column">
+            <h2>Cours de Janne</h2>
+            <div class="scrollable-list">
+                <ul>
+                    <li *ngFor="let course of janneCourses ">
+                        <div>
+                            <strong>{{ course.name }}</strong><br>
+                            {{ course.date }} à {{ course.time }}<br>
+                            <em>{{ course.status }}</em>
+                        </div>
+                        <button (click)="unregister('janne', course.id)">Se désinscrire</button>
+                    </li>
+                </ul>
+            </div>
+            <div *ngIf="janneCourses.length > 4" class="more-indicator">
+                Faites défiler pour voir plus ↓
+            </div>
+        </div>
+    </div>
+
+
+    <div class="search-section">
+        <h3>Rechercher des cours</h3>
+
+        <div class="search-filters">
+            <label>
+                Salle :
+                <select [(ngModel)]="selectedClub">
+                    <option *ngFor="let club of clubKeys" [value]="club">{{ club }}</option>
+                </select>
+            </label>
+            <label>
+                Date :
+                <input type="date" [(ngModel)]="date">
+            </label>
+            <button (click)="searchCourses()">Rechercher</button>
+        </div>
+
+        <div *ngIf="availableCourses.length > 0">
+            <h4>Cours disponibles</h4>
+            <div class="courses-grid">
+                <div *ngFor="let c of availableCourses"
+                     [class.selected]="selectedAvailableCourse === c"
+                     (click)="selectedAvailableCourse = c"
+                     class="course-card">
+                    <strong>{{ c.name }}</strong><br>
+                    {{ c.date }} à {{ c.time }}
+                </div>
+            </div>
+
+            <div class="actions" *ngIf="selectedAvailableCourse">
+                <button (click)="register('mathieu')">Inscrire Mathieu</button>
+                <button (click)="register('janne')">Inscrire Janne</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button class="btn btn-primary" (click)="openConfig()">
+    Voir configuration cours automatique
+</button>
+
+<div *ngIf="showModal" class="modal-overlay">
+    <div class="modal">
+        <h2>Configuration des cours</h2>
+
+        <div class="users-container">
+            <div *ngFor="let user of config; let u = index" class="user-column">
+                <h3>{{ user.compte }} ({{ user.mail }})</h3>
+
+                <div *ngFor="let jour of jours">
+                    <h4>{{ jour | titlecase }}</h4>
+
+                    <div *ngFor="let cours of getAllCours(user, jour); let i = index" class="cours-item">
+                        <select [(ngModel)]="cours.salle">
+                            <option *ngFor="let s of salles" [value]="s">{{ s }}</option>
+                        </select>
+                        <input type="time" [(ngModel)]="cours.heure" />
+                        <input type="text" [(ngModel)]="cours.nom" placeholder="Nom du cours" />
+                        <button (click)="removeCoursByCours(user, jour, cours)">🗑️</button>
+                    </div>
+                    <button (click)="addCours(u, jour)">+ Ajouter un cours</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button (click)="saveConfig()">💾 Sauvegarder</button>
+            <button (click)="closeModal()">❌ Fermer</button>
+        </div>
+    </div>
+</div>
+
+

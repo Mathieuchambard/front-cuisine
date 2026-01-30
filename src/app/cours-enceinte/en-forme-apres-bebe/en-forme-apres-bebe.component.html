@@ -1,0 +1,35 @@
+<div class="en-forme-apres-bebe">
+
+    <h2>En forme après bébé</h2>
+
+    <!-- 12 boutons, 4 par ligne -->
+    <div class="weeks-grid">
+        <button
+                *ngFor="let week of weeks"
+                (click)="selectWeek(week)"
+                [class.selected]="week === selectedWeek">
+            {{ week }}
+        </button>
+    </div>
+
+    <div class="videos">
+        <h3 *ngIf="currentVideos.length > 0">
+            Vidéos pour la semaine {{ selectedWeek }}
+        </h3>
+        <p *ngIf="currentVideos.length === 0">
+            Aucune vidéo trouvée pour la semaine {{ selectedWeek }}.
+        </p>
+
+        <div class="video-list">
+            <div class="video-card" *ngFor="let video of currentVideos">
+                <h4>Vidéo {{ video.id }}</h4>
+                <video
+                        [src]="video.file"
+                        [poster]="video.minia"
+                        controls
+                ></video>
+            </div>
+        </div>
+    </div>
+
+</div>
